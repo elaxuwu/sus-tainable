@@ -1,0 +1,12 @@
+{
+  "name": "sus-tainable",
+  "private": true,
+  "type": "module",
+  "overrides": { "sharp": "0.35.5" },
+  "scripts": {
+    "test": "node --test tests/backend.test.js"
+  },
+  "devDependencies": {
+    "wrangler": "^4.148.0"
+  }
+}

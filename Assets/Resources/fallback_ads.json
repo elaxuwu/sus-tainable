@@ -1,0 +1,444 @@
+{
+  "ads": [
+    {
+      "id": "local_00",
+      "product": "OceanSip Bottle",
+      "category": "drinks",
+      "adText": "Our planet-friendly bottle is naturally better.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "planet-friendly",
+          "type": "vague",
+          "explanation": "Planet-friendly does not say what improved or offer evidence."
+        }
+      ],
+      "verdictText": "Planet-friendly does not say what improved or offer evidence.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_01",
+      "product": "TideCup",
+      "category": "drinks",
+      "adText": "Our leaf badge proves it: approved by the TideCup Green Team.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "approved by the TideCup Green Team",
+          "type": "fake_label",
+          "explanation": "The seller awarded its own badge. That is not independent verification."
+        }
+      ],
+      "verdictText": "The seller awarded its own badge. That is not independent verification.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_02",
+      "product": "ReedRush Flask",
+      "category": "drinks",
+      "adText": "Zero impact hydration. No lifecycle report needed.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "Zero impact",
+          "type": "no_proof",
+          "explanation": "Zero impact is a sweeping promise without a defined scope or evidence."
+        }
+      ],
+      "verdictText": "Zero impact is a sweeping promise without a defined scope or evidence.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_03",
+      "product": "DewDrop Carton",
+      "category": "drinks",
+      "adText": "Now 30% less plastic. Lighter on the planet.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "30% less plastic",
+          "type": "wrong_comparison",
+          "explanation": "Thirty percent less than which carton? A comparison needs a baseline."
+        }
+      ],
+      "verdictText": "Thirty percent less than which carton? A comparison needs a baseline.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_04",
+      "product": "LoopTin",
+      "category": "drinks",
+      "adText": "This bottle body contains 80% recycled aluminium by mass. The case includes an independent materials audit verifying that amount. The cap is excluded.",
+      "isSus": false,
+      "tells": [],
+      "verdictText": "The claim states an amount, the bottle-body scope, and verification. It does not cover the cap.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_05",
+      "product": "StreamBox",
+      "category": "drinks",
+      "adText": "The new 500 ml carton uses 12 g of plastic instead of 15 g in our previous 500 ml carton. An independent packaging audit in this case verifies both measurements.",
+      "isSus": false,
+      "tells": [],
+      "verdictText": "A same-size comparison, measured quantities, and verification support this packaging claim.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_06",
+      "product": "MossGlow Shampoo",
+      "category": "cosmetics",
+      "adText": "Certified Green by Our Own Awesome Team.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "Certified Green",
+          "type": "fake_label",
+          "explanation": "An official-looking phrase means little when the certification is awarded by the seller."
+        }
+      ],
+      "verdictText": "An official-looking phrase means little when the certification is awarded by the seller.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_07",
+      "product": "FernFoam",
+      "category": "cosmetics",
+      "adText": "All-natural care that is harmless to every river.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "All-natural",
+          "type": "vague",
+          "explanation": "Natural describes no measured environmental benefit. The river promise also has no supporting evidence."
+        },
+        {
+          "phrase": "harmless to every river",
+          "type": "no_proof",
+          "explanation": "Natural describes no measured environmental benefit. The river promise also has no supporting evidence."
+        }
+      ],
+      "verdictText": "Natural describes no measured environmental benefit. The river promise also has no supporting evidence.",
+      "difficulty": 2
+    },
+    {
+      "id": "local_08",
+      "product": "SoftSprout Lotion",
+      "category": "cosmetics",
+      "adText": "Our box is recycled, so the whole lotion is sustainable.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "the whole lotion is sustainable",
+          "type": "tiny_truth",
+          "explanation": "A recycled box does not establish the impact of the lotion or its ingredients."
+        }
+      ],
+      "verdictText": "A recycled box does not establish the impact of the lotion or its ingredients.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_09",
+      "product": "GlowRoot Soap",
+      "category": "cosmetics",
+      "adText": "Twice as sustainable. No comparison needed.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "Twice as sustainable",
+          "type": "wrong_comparison",
+          "explanation": "Twice as sustainable needs a measure and a named comparison."
+        }
+      ],
+      "verdictText": "Twice as sustainable needs a measure and a named comparison.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_10",
+      "product": "PetalPump",
+      "category": "cosmetics",
+      "adText": "Our new empty 250 ml bottle weighs 20 g, compared with 25 g for the previous 250 ml bottle. An independent packaging audit in this case verifies the measurements.",
+      "isSus": false,
+      "tells": [],
+      "verdictText": "The claim compares the same bottle size and includes measured, verified packaging weights.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_11",
+      "product": "ClearLeaf",
+      "category": "cosmetics",
+      "adText": "The outer carton contains 70% recycled paper by mass, verified by an independent paper audit supplied in the case. The bottle and pump are outside this claim.",
+      "isSus": false,
+      "tells": [],
+      "verdictText": "The carton claim has a measured amount, evidence, and a clear scope.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_12",
+      "product": "ThreadLoop Jacket",
+      "category": "fashion",
+      "adText": "Eco-conscious style. Wear it and save the planet.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "Eco-conscious",
+          "type": "vague",
+          "explanation": "The ad supplies neither a specific improvement nor evidence for its enormous promise."
+        },
+        {
+          "phrase": "save the planet",
+          "type": "no_proof",
+          "explanation": "The ad supplies neither a specific improvement nor evidence for its enormous promise."
+        }
+      ],
+      "verdictText": "The ad supplies neither a specific improvement nor evidence for its enormous promise.",
+      "difficulty": 2
+    },
+    {
+      "id": "local_13",
+      "product": "CloudWeave",
+      "category": "fashion",
+      "adText": "Our jacket button is made from recycled plastic. That makes the entire jacket circular.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "the entire jacket circular",
+          "type": "tiny_truth",
+          "explanation": "One recycled button does not establish a circular system for the entire jacket."
+        }
+      ],
+      "verdictText": "One recycled button does not establish a circular system for the entire jacket.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_14",
+      "product": "PineThread",
+      "category": "fashion",
+      "adText": "Certified Earth Kind, awarded by PineThread itself.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "Certified Earth Kind",
+          "type": "fake_label",
+          "explanation": "The brand gives itself the certification. Independent evidence is missing."
+        }
+      ],
+      "verdictText": "The brand gives itself the certification. Independent evidence is missing.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_15",
+      "product": "TrailFold",
+      "category": "fashion",
+      "adText": "Our greenest shirt yet, with 40% less water.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "40% less water",
+          "type": "wrong_comparison",
+          "explanation": "Water use is not comparable without a production boundary and a baseline."
+        }
+      ],
+      "verdictText": "Water use is not comparable without a production boundary and a baseline.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_16",
+      "product": "PatchHarbor",
+      "category": "fashion",
+      "adText": "The shell fabric is 60% recycled polyester by mass. An independent fibre audit supplied in this case verifies the shell. Lining, zips, and buttons are excluded.",
+      "isSus": false,
+      "tells": [],
+      "verdictText": "The amount and shell-only scope are specific, and an independent audit supports them.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_17",
+      "product": "WovenArc",
+      "category": "fashion",
+      "adText": "This repair programme replaces damaged jacket zips for five years. The case supplies published terms and a completed repair record. No claim about total carbon impact is made.",
+      "isSus": false,
+      "tells": [],
+      "verdictText": "A specific, documented repair service is supported. It makes no unsupported whole-product promise.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_18",
+      "product": "SunCrumb",
+      "category": "snacks",
+      "adText": "Naturally planet-positive snacks. Every bite cancels your footprint.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "planet-positive",
+          "type": "vague",
+          "explanation": "The phrase defines no benefit, and the footprint claim needs much more evidence."
+        },
+        {
+          "phrase": "cancels your footprint",
+          "type": "no_proof",
+          "explanation": "The phrase defines no benefit, and the footprint claim needs much more evidence."
+        }
+      ],
+      "verdictText": "The phrase defines no benefit, and the footprint claim needs much more evidence.",
+      "difficulty": 2
+    },
+    {
+      "id": "local_19",
+      "product": "BerryParcel",
+      "category": "snacks",
+      "adText": "The shipping label is compostable, so our whole snack pack disappears safely in nature.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "our whole snack pack disappears safely in nature",
+          "type": "tiny_truth",
+          "explanation": "A shipping label does not establish how every part of the snack pack behaves."
+        }
+      ],
+      "verdictText": "A shipping label does not establish how every part of the snack pack behaves.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_20",
+      "product": "SeedSquare",
+      "category": "snacks",
+      "adText": "Our wrapper is 50% greener. Than what? That is our secret.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "50% greener",
+          "type": "wrong_comparison",
+          "explanation": "Greener is not a defined measurement, and the comparison is deliberately hidden."
+        }
+      ],
+      "verdictText": "Greener is not a defined measurement, and the comparison is deliberately hidden.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_21",
+      "product": "OrchardPop",
+      "category": "snacks",
+      "adText": "Approved Sustainable by the OrchardPop Appreciation Club.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "Approved Sustainable",
+          "type": "fake_label",
+          "explanation": "A promotional club is not independent environmental verification."
+        }
+      ],
+      "verdictText": "A promotional club is not independent environmental verification.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_22",
+      "product": "OatPost",
+      "category": "snacks",
+      "adText": "The new 100 g snack carton weighs 18 g, compared with 24 g previously. An independent packaging audit supplied in the case confirms the weights. The snack recipe is unchanged.",
+      "isSus": false,
+      "tells": [],
+      "verdictText": "The same product size, packaging weights, and independent record support the limited claim.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_23",
+      "product": "FruitFold",
+      "category": "snacks",
+      "adText": "The delivery box contains 85% recycled paper by mass. An independent paper audit is supplied in this case. The inner food-safe pouch is not included.",
+      "isSus": false,
+      "tells": [],
+      "verdictText": "The box claim is measured, verified, and clearly excludes the inner pouch.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_24",
+      "product": "VoltNest Charger",
+      "category": "tech",
+      "adText": "The totally green charger. Unlimited use, zero environmental cost.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "totally green",
+          "type": "vague",
+          "explanation": "The wording gives no defined benefit and ignores the evidence needed for a zero-impact promise."
+        },
+        {
+          "phrase": "zero environmental cost",
+          "type": "no_proof",
+          "explanation": "The wording gives no defined benefit and ignores the evidence needed for a zero-impact promise."
+        }
+      ],
+      "verdictText": "The wording gives no defined benefit and ignores the evidence needed for a zero-impact promise.",
+      "difficulty": 2
+    },
+    {
+      "id": "local_25",
+      "product": "CircuitBloom",
+      "category": "tech",
+      "adText": "Our cardboard insert is recycled. Therefore the entire device is sustainable.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "the entire device is sustainable",
+          "type": "tiny_truth",
+          "explanation": "An insert tells you little about the device, its manufacture, or its electricity use."
+        }
+      ],
+      "verdictText": "An insert tells you little about the device, its manufacture, or its electricity use.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_26",
+      "product": "BrightDock",
+      "category": "tech",
+      "adText": "Uses 35% less energy than other chargers. We have not stated which ones.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "35% less energy",
+          "type": "wrong_comparison",
+          "explanation": "A fair energy comparison needs named devices and the same test conditions."
+        }
+      ],
+      "verdictText": "A fair energy comparison needs named devices and the same test conditions.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_27",
+      "product": "LeafSignal",
+      "category": "tech",
+      "adText": "Certified Carbon Free by the LeafSignal Marketing Department.",
+      "isSus": true,
+      "tells": [
+        {
+          "phrase": "Certified Carbon Free",
+          "type": "fake_label",
+          "explanation": "Marketing awarded its own badge. No independent carbon evidence is supplied."
+        }
+      ],
+      "verdictText": "Marketing awarded its own badge. No independent carbon evidence is supplied.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_28",
+      "product": "RepairRelay",
+      "category": "tech",
+      "adText": "The battery can be replaced using two screws. The case supplies a repair manual, spare-part listing, and demonstration. This is a repairability claim, not a total-impact claim.",
+      "isSus": false,
+      "tells": [],
+      "verdictText": "The specific battery-replacement claim has practical evidence and a limited scope.",
+      "difficulty": 1
+    },
+    {
+      "id": "local_29",
+      "product": "QuietCurrent",
+      "category": "tech",
+      "adText": "Standby power is 0.2 W under the stated lab test, compared with 0.5 W for the previous model under the same test. An independent test report is supplied in the case.",
+      "isSus": false,
+      "tells": [],
+      "verdictText": "Both models use the same test conditions, with measured power and independent evidence.",
+      "difficulty": 1
+    }
+  ]
+}
