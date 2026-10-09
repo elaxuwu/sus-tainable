@@ -12,7 +12,7 @@ public sealed class SusGame : MonoBehaviour
     public Vector3 panelPosition=new Vector3(0.22f,1.15f,-0.14f);
     public float tabletopHeight=.95f;
     public bool reducedMotion,muted;
-    public bool CanAnswer=>state==State.Reading&&settingsMenu!=null&&!settingsMenu.activeSelf&&(helpPanel==null||!helpPanel.activeSelf);
+    public bool CanAnswer=>state==State.Reading&&settingsMenu!=null&&!settingsMenu.activeSelf&&(helpPanel==null||!helpPanel.activeSelf)&&(careerPanel==null||!careerPanel.activeSelf)&&(adPreview==null||!adPreview.activeSelf);
     public TMP_FontAsset bodyFont,displayFont;
     enum State { Title, Preparing, Moving, Reading, Verdict, Summary }
     State state;
@@ -57,10 +57,22 @@ public sealed class SusGame : MonoBehaviour
     float started;
     AudioSource sound;
     AudioClip good,bad;
+    public DeskPresentation presentation;
+    AudioSource musicSource;
+    RawImage detectivePortrait;
+    TMP_Text detectiveLine;
+    GameObject careerPanel,adPreview;
+    TMP_Text careerBody;
+    RawImage previewImage;
+    Button contrastButton;
+    bool highContrast;
+    TMP_Text campaignHint;
+    int verdictPointerFrame=-1;
+    readonly List<Image> contrastSurfaces=new List<Image>();
     readonly List<Texture2D> art=new List<Texture2D>();
     readonly Dictionary<string,Texture2D> artCache=new Dictionary<string,Texture2D>();
     readonly List<bool> recent=new List<bool>();
-    static readonly Color Ink=new Color(.12f,.18f,.19f),Paper=new Color(.96f,.96f,.93f);
+    static readonly Color Ink=new Color(.08f,.12f,.13f),Paper=new Color(.96f,.96f,.93f);
 
     void Start()
     {
@@ -75,8 +87,12 @@ public sealed class SusGame : MonoBehaviour
         if(physicsInput==null)physicsInput=view.gameObject.AddComponent<PhysicsRaycaster>();
         physicsInput.eventMask=1<<30;
         muted=PlayerPrefs.GetInt("SoundMuted",0)==1;reducedMotion=PlayerPrefs.GetInt("ReduceMotion",0)==1;largeText=PlayerPrefs.GetInt("LargeText",0)==1;
+        highContrast=PlayerPrefs.GetInt("HighContrast",0)==1;
+        if(presentation==null)presentation=GetComponent<DeskPresentation>();if(presentation!=null)presentation.Prepare();
         BuildHUD(); BuildPanel(); BuildButtons();RefreshSettings();
         sound=gameObject.AddComponent<AudioSource>(); good=Tone(640); bad=Tone(170);markSound=Noise("Marker",.055f,.08f);stampSound=Noise("Stamp",.14f,.18f);paperSound=Noise("Paper",.11f,.055f);
+        if(presentation!=null){if(presentation.correct!=null)good=presentation.correct;if(presentation.wrong!=null)bad=presentation.wrong;if(presentation.marker!=null)markSound=presentation.marker;if(presentation.stamp!=null)stampSound=presentation.stamp;if(presentation.paper!=null)paperSound=presentation.paper;
+        if(presentation.music!=null){musicSource=gameObject.AddComponent<AudioSource>();musicSource.clip=presentation.music;musicSource.loop=true;musicSource.volume=.24f;musicSource.Play();}}
         state=State.Title; modalTitle.text="Sus-tainable";
         modalBody.text="Spot the trick. Ask for proof.\n\nInspect ten product claims at your desk.\nMark suspicious words, then give your verdict.";
         var lamp=GameObject.Find("Desk lamp glow");if(lamp!=null)streakLight=lamp.GetComponent<Light>();
@@ -84,12 +100,15 @@ public sealed class SusGame : MonoBehaviour
     void Update()
     {
         if(hud==null) return;
+        HandleVerdictPointer();
+        if(presentation!=null)presentation.Pose(state==State.Reading,reducedMotion);
+        if(musicSource!=null)musicSource.mute=muted;
         if(mouseLook!=null)
         {
-            mouseLook.lookEnabled=!reducedMotion&&state==State.Reading&&!settingsMenu.activeSelf&&(helpPanel==null||!helpPanel.activeSelf);
+            mouseLook.lookEnabled=!reducedMotion&&state==State.Reading&&!settingsMenu.activeSelf&&(helpPanel==null||!helpPanel.activeSelf)&&(careerPanel==null||!careerPanel.activeSelf)&&(adPreview==null||!adPreview.activeSelf);
             mouseLook.holdLook=selection.IsSelecting;
         }
-        if(Keyboard.current!=null&&Keyboard.current.escapeKey.wasPressedThisFrame){settingsMenu.SetActive(false);if(helpPanel!=null)helpPanel.SetActive(false);}
+        if(Keyboard.current!=null&&Keyboard.current.escapeKey.wasPressedThisFrame){settingsMenu.SetActive(false);if(helpPanel!=null)helpPanel.SetActive(false);if(careerPanel!=null)careerPanel.SetActive(false);if(adPreview!=null)adPreview.SetActive(false);}
         if(layoutWidth!=Screen.width||layoutHeight!=Screen.height) Layout();
         scoreLabel.text=score+"  points";
         caseLabel.text=state==State.Title?"READY":state==State.Summary?"SHIFT COMPLETE":tutorial?"TRAINING":"CASE  "+Mathf.Min(completed+1,10)+"/10";
@@ -111,6 +130,23 @@ public sealed class SusGame : MonoBehaviour
     {
         rect.anchorMin=min;rect.anchorMax=max;rect.offsetMin=low;rect.offsetMax=high;
     }
+    void HandleVerdictPointer()
+    {
+        if(!CanAnswer||EventSystem.current==null)return;
+        bool mouse=Mouse.current!=null&&Mouse.current.leftButton.wasPressedThisFrame;
+        bool touch=Touchscreen.current!=null&&Touchscreen.current.primaryTouch.press.wasPressedThisFrame;
+        if(!mouse&&!touch)return;
+        Vector2 position=mouse?Mouse.current.position.ReadValue():Touchscreen.current.primaryTouch.position.ReadValue();
+        SubmitVerdictPointer(position);
+    }
+    public void SubmitVerdictPointer(Vector2 position)
+    {
+        if(!CanAnswer||EventSystem.current==null||verdictPointerFrame==Time.frameCount)return;
+        var results=new List<RaycastResult>();EventSystem.current.RaycastAll(new PointerEventData(EventSystem.current){position=position},results);
+        foreach(var result in results)if(result.module is GraphicRaycaster)return;
+        if(Physics.Raycast(view.ScreenPointToRay(position),out var hit,10,1<<30))
+        {var button=hit.collider.GetComponent<DeskVerdictButton>();if(button!=null){verdictPointerFrame=Time.frameCount;Answer(button.suspicious);}}
+    }
     void Layout()
     {
         layoutWidth=Screen.width;layoutHeight=Screen.height;
@@ -119,6 +155,8 @@ public sealed class SusGame : MonoBehaviour
         float width=root.rect.width,height=root.rect.height;
         modalRect.localScale=Vector3.one*Mathf.Max(.2f,Mathf.Min(1f,(width-64)/1040f,(height-180)/720f));
         if(helpPanel!=null)helpPanel.transform.localScale=Vector3.one*Mathf.Min(1f,(width-64)/900f,(height-180)/530f);
+        if(careerPanel!=null)careerPanel.transform.localScale=Vector3.one*Mathf.Min(1f,(width-64)/900f,(height-150)/650f);
+        if(adPreview!=null)adPreview.transform.localScale=Vector3.one*Mathf.Min(1f,(width-64)/1200f,(height-100)/870f);
         hudStrip.localScale=Vector3.one*Mathf.Max(.2f,Mathf.Min(1f,(width-240)/530f));
         settingsRect.anchoredPosition=new Vector2(-86,-34);
         settingsMenuRect.anchoredPosition=new Vector2(-24,-66);
@@ -151,7 +189,7 @@ public sealed class SusGame : MonoBehaviour
     {
         var i=Back(name,parent,p,size,new Color(.19f,.24f,.22f));i.raycastTarget=true; var b=i.gameObject.AddComponent<Button>();
         var colors=b.colors;colors.highlightedColor=new Color(.86f,.94f,.92f);colors.pressedColor=new Color(.65f,.79f,.75f);colors.disabledColor=new Color(.55f,.6f,.58f,.65f);colors.fadeDuration=.08f;b.colors=colors;
-        b.onClick.AddListener(()=>callback()); var t=Label("Label",i.transform,value,Vector2.zero,size,23,Paper); t.alignment=TextAlignmentOptions.Center; return b;
+        b.onClick.AddListener(()=>{callback();if(EventSystem.current!=null)EventSystem.current.SetSelectedGameObject(null);}); var t=Label("Label",i.transform,value,Vector2.zero,size,23,Paper); t.alignment=TextAlignmentOptions.Center; return b;
     }
     void BuildHUD()
     {
@@ -170,20 +208,25 @@ public sealed class SusGame : MonoBehaviour
         var settings=Button("Settings",go.transform,"Menu",Vector2.zero,new Vector2(100,40),()=>settingsMenu.SetActive(!settingsMenu.activeSelf));
         settings.GetComponent<Image>().color=new Color(.10f,.13f,.13f,.9f);
         settingsRect=settings.GetComponent<RectTransform>();settingsRect.anchorMin=settingsRect.anchorMax=new Vector2(1,1);settingsRect.anchoredPosition=new Vector2(-86,-34);
-        settingsMenu=Back("Settings menu",go.transform,Vector2.zero,new Vector2(278,296),Paper).gameObject;
+        settingsMenu=Back("Settings menu",go.transform,Vector2.zero,new Vector2(278,406),Paper).gameObject;
         settingsMenu.GetComponent<Image>().raycastTarget=true;
         var menu=settingsMenu.GetComponent<RectTransform>();settingsMenuRect=menu;menu.pivot=new Vector2(1,1);menu.anchorMin=menu.anchorMax=new Vector2(1,1);menu.anchoredPosition=new Vector2(-24,-66);
-        Label("Settings heading",menu,"Desk settings",new Vector2(0,112),new Vector2(230,30),24,Ink);
-        soundButton=Button("Sound",menu,"",new Vector2(0,57),new Vector2(230,44),()=>{muted=!muted;PlayerPrefs.SetInt("SoundMuted",muted?1:0);RefreshSettings();});
-        motionButton=Button("Motion",menu,"",new Vector2(0,3),new Vector2(230,44),()=>{reducedMotion=!reducedMotion;PlayerPrefs.SetInt("ReduceMotion",reducedMotion?1:0);RefreshSettings();});
-        textButton=Button("Text size",menu,"",new Vector2(0,-51),new Vector2(230,44),()=>{largeText=!largeText;PlayerPrefs.SetInt("LargeText",largeText?1:0);RefreshSettings();});
-        Button("Help",menu,"How to play",new Vector2(0,-109),new Vector2(230,38),()=>{helpPanel.SetActive(true);settingsMenu.SetActive(false);});
+        Label("Settings heading",menu,"Desk settings",new Vector2(0,168),new Vector2(230,30),24,Ink);
+        soundButton=Button("Sound",menu,"",new Vector2(0,113),new Vector2(230,44),()=>{muted=!muted;PlayerPrefs.SetInt("SoundMuted",muted?1:0);RefreshSettings();});
+        motionButton=Button("Motion",menu,"",new Vector2(0,59),new Vector2(230,44),()=>{reducedMotion=!reducedMotion;PlayerPrefs.SetInt("ReduceMotion",reducedMotion?1:0);RefreshSettings();});
+        textButton=Button("Text size",menu,"",new Vector2(0,5),new Vector2(230,44),()=>{largeText=!largeText;PlayerPrefs.SetInt("LargeText",largeText?1:0);RefreshSettings();});
+        contrastButton=Button("Contrast",menu,"",new Vector2(0,-49),new Vector2(230,44),()=>{highContrast=!highContrast;PlayerPrefs.SetInt("HighContrast",highContrast?1:0);RefreshSettings();});
+        Button("Career",menu,"Rank and badges",new Vector2(0,-103),new Vector2(230,44),()=>{careerBody.text=CareerProgress.Collection();careerPanel.SetActive(true);settingsMenu.SetActive(false);});
+        Button("Help",menu,"How to play",new Vector2(0,-161),new Vector2(230,38),()=>{helpPanel.SetActive(true);settingsMenu.SetActive(false);});
         foreach(var row in menu.GetComponentsInChildren<Button>())
         {
             row.GetComponent<Image>().color=new Color(.87f,.87f,.82f);
             var text=row.GetComponentInChildren<TMP_Text>();text.color=Ink;text.fontSize=20;text.alignment=TextAlignmentOptions.MidlineLeft;text.margin=new Vector4(14,0,14,0);
         }
         settingsMenu.SetActive(false);
+        if(presentation!=null&&presentation.Portrait!=null){var portraitRoot=Back("Detective call",go.transform,Vector2.zero,new Vector2(230,96),new Color(.1f,.16f,.16f,.94f));var pr=portraitRoot.rectTransform;pr.anchorMin=pr.anchorMax=new Vector2(0,1);pr.anchoredPosition=new Vector2(138,-68);
+        detectivePortrait=Rect("Detective",pr,new Vector2(-65,0),new Vector2(86,86)).gameObject.AddComponent<RawImage>();detectivePortrait.texture=presentation.Portrait;detectivePortrait.raycastTarget=false;
+        detectiveLine=Label("Detective line",pr,"Inspector\nBureau of Sus",new Vector2(43,0),new Vector2(126,80),19,Paper);detectiveLine.enableAutoSizing=true;detectiveLine.fontSizeMin=15;detectiveLine.fontSizeMax=19;}
         modal=Back("Welcome dossier",go.transform,Vector2.zero,new Vector2(1040,720),Paper).gameObject;modal.GetComponent<Image>().raycastTarget=true;modalRect=modal.GetComponent<RectTransform>();
         Back("Dossier spine",modal.transform,new Vector2(-501,0),new Vector2(38,720),new Color(.12f,.23f,.23f));
         Label("Bureau name",modal.transform,"Bureau of Sus",new Vector2(15,298),new Vector2(840,45),22,Ink);
@@ -197,6 +240,14 @@ public sealed class SusGame : MonoBehaviour
         Label("Help title",helpPanel.transform,"Read. Mark. Decide.",new Vector2(0,172),new Vector2(790,70),42,Ink).fontStyle=FontStyles.Bold;
         Label("Help copy",helpPanel.transform,"Drag across words to mark a phrase. Use up to three marks.\nClick a mark or its evidence row to remove it.\n\nLEGIT: this claim has supporting evidence.\nSUS: it contains a misleading or unsupported promise.\n\nAfter the verdict: green = found, amber = missed, red = false evidence.\nKeyboard: arrows move, Space starts/ends a phrase, L/S submits.",new Vector2(0,-5),new Vector2(790,300),24,Ink);
         Button("Close help",helpPanel.transform,"Back to desk",new Vector2(-260,-207),new Vector2(270,52),()=>helpPanel.SetActive(false));helpPanel.SetActive(false);
+        careerPanel=Back("Career report",go.transform,Vector2.zero,new Vector2(900,650),Paper).gameObject;careerPanel.GetComponent<Image>().raycastTarget=true;
+        Label("Career title",careerPanel.transform,"Your detective record",new Vector2(0,260),new Vector2(790,60),42,Ink).fontStyle=FontStyles.Bold;
+        careerBody=Label("Career progress",careerPanel.transform,"",new Vector2(0,-5),new Vector2(790,450),24,Ink);careerBody.enableAutoSizing=true;careerBody.fontSizeMin=19;careerBody.fontSizeMax=24;
+        Button("Career close",careerPanel.transform,"Back to desk",new Vector2(-255,-272),new Vector2(270,48),()=>careerPanel.SetActive(false));careerPanel.SetActive(false);
+        adPreview=Back("Campaign preview",go.transform,Vector2.zero,new Vector2(1200,870),new Color(.07f,.12f,.13f,1)).gameObject;adPreview.GetComponent<Image>().raycastTarget=true;
+        previewImage=Rect("Full campaign",adPreview.transform,new Vector2(0,22),new Vector2(1140,760)).gameObject.AddComponent<RawImage>();previewImage.raycastTarget=false;
+        Button("Close campaign",adPreview.transform,"Back to evidence",new Vector2(0,-394),new Vector2(280,48),()=>adPreview.SetActive(false));adPreview.SetActive(false);
+        contrastSurfaces.Add(modal.GetComponent<Image>());contrastSurfaces.Add(helpPanel.GetComponent<Image>());contrastSurfaces.Add(careerPanel.GetComponent<Image>());
     }
     void BuildPanel()
     {
@@ -207,30 +258,32 @@ public sealed class SusGame : MonoBehaviour
         var go=new GameObject("Case world canvas",typeof(RectTransform),typeof(Canvas),typeof(GraphicRaycaster));go.transform.SetParent(panel,false);
         var canvas=go.GetComponent<Canvas>();canvas.renderMode=RenderMode.WorldSpace;canvas.worldCamera=view;
         var rect=go.GetComponent<RectTransform>();rect.sizeDelta=new Vector2(1100,650);rect.localScale=new Vector3(.87f/1100,.514f/650,1);
-        Back("Paper",go.transform,Vector2.zero,rect.sizeDelta,Paper);
+        contrastSurfaces.Add(Back("Paper",go.transform,Vector2.zero,rect.sizeDelta,Paper));
         Back("Picture column",go.transform,new Vector2(-359,0),new Vector2(322,600),new Color(.94f,.93f,.88f));
         caseMeta=Label("Case category",go.transform,"",new Vector2(172,279),new Vector2(634,32),18,new Color(.37f,.46f,.44f));caseMeta.characterSpacing=2;
         header=Label("Product name",go.transform,"",new Vector2(172,220),new Vector2(634,74),46,Ink);if(displayFont!=null)header.font=displayFont;header.enableAutoSizing=true;header.fontSizeMin=28;header.fontSizeMax=46;
         Label("Product label",go.transform,"Product",new Vector2(-360,270),new Vector2(270,32),19,Ink);
-        productPicture=Rect("Product picture",go.transform,new Vector2(-359,128),new Vector2(268,215)).gameObject.AddComponent<RawImage>();productPicture.raycastTarget=false;
-        Label("Campaign label",go.transform,"Campaign",new Vector2(-360,-17),new Vector2(270,28),19,Ink);
-        adPicture=Rect("Ad artwork",go.transform,new Vector2(-359,-115),new Vector2(268,118)).gameObject.AddComponent<RawImage>();adPicture.raycastTarget=false;
+        productPicture=Rect("Product picture",go.transform,new Vector2(-359,125),new Vector2(268,200)).gameObject.AddComponent<RawImage>();productPicture.raycastTarget=false;
+        Label("Campaign label",go.transform,"Campaign",new Vector2(-360,-4),new Vector2(270,28),19,Ink);
+        adPicture=Rect("Ad artwork",go.transform,new Vector2(-359,-106),new Vector2(288,192)).gameObject.AddComponent<RawImage>();adPicture.raycastTarget=true;var enlarge=adPicture.gameObject.AddComponent<Button>();enlarge.targetGraphic=adPicture;enlarge.transition=Selectable.Transition.None;enlarge.navigation=new Navigation{mode=Navigation.Mode.None};
+        enlarge.onClick.AddListener(()=>{previewImage.texture=adPicture.texture;adPreview.SetActive(true);if(EventSystem.current!=null)EventSystem.current.SetSelectedGameObject(null);});
+        campaignHint=Label("Campaign hint",go.transform,"Click campaign to read full size",new Vector2(-359,-222),new Vector2(286,28),16,Ink);
         var claim=Label("Selectable claim",go.transform,"",new Vector2(172,91),new Vector2(634,180),34,Ink);claim.alignment=TextAlignmentOptions.MidlineLeft;claim.enableAutoSizing=true;claim.fontSizeMin=18;claim.fontSizeMax=34;claim.raycastTarget=true;
         selection=claim.gameObject.AddComponent<ClaimSelection>();selection.text=claim;selection.eventCamera=view;
         selection.Changed+=EvidenceChanged;selection.Notice+=message=>{evidenceHint.text=message;messageUntil=Time.unscaledTime+3;};
-        for(int i=0;i<3;i++)
+        for(int i=0;i<6;i++)
         {
-            int index=i;var row=Button("Evidence "+i,go.transform,"",new Vector2(172,-30-i*32),new Vector2(634,29),()=>selection.Remove(index));
+            int index=i;var row=Button("Evidence "+i,go.transform,"",new Vector2(172,-30-i*32),new Vector2(634,29),()=>{if(state==State.Reading)selection.Remove(index);});
             row.GetComponent<Image>().color=new Color(.96f,.86f,.58f);var label=row.GetComponentInChildren<TMP_Text>();label.color=Ink;label.fontSize=18;label.alignment=TextAlignmentOptions.MidlineLeft;label.margin=new Vector4(10,0,10,0);label.enableAutoSizing=true;label.fontSizeMin=14;label.fontSizeMax=18;label.overflowMode=TextOverflowModes.Ellipsis;
-            row.gameObject.SetActive(false);evidenceRows.Add(row);
+            row.navigation=new Navigation{mode=Navigation.Mode.None};row.gameObject.SetActive(false);evidenceRows.Add(row);
         }
         feedbackBand=Back("Evidence feedback",go.transform,new Vector2(172,-198),new Vector2(634,145),Color.clear);
         feedbackTitle=Label("Verdict heading",go.transform,"",new Vector2(172,-150),new Vector2(586,30),22,Ink);feedbackTitle.fontStyle=FontStyles.Bold;
         feedback=Label("Case feedback",go.transform,"",new Vector2(172,-208),new Vector2(586,84),21,Ink);feedback.enableAutoSizing=true;feedback.fontSizeMin=16;feedback.fontSizeMax=21;
         evidenceHint=Label("Selected evidence",go.transform,"",new Vector2(90,-294),new Vector2(460,30),17,new Color(.35f,.43f,.4f));evidenceHint.enableAutoSizing=true;evidenceHint.fontSizeMin=13;evidenceHint.fontSizeMax=17;
-        clearEvidence=Button("Clear evidence",go.transform,"Clear marks",new Vector2(-359,-266),new Vector2(150,34),()=>selection.Clear());
+        clearEvidence=Button("Clear evidence",go.transform,"Clear marks",new Vector2(-359,-298),new Vector2(150,34),()=>selection.Clear());
         continueButton=Button("Continue",go.transform,"Next case",new Vector2(383,-294),new Vector2(200,42),Continue);continueButton.gameObject.SetActive(false);
-        var stampGo=new GameObject("Verdict stamp",typeof(RectTransform),typeof(CanvasGroup));stamp=stampGo.GetComponent<RectTransform>();stamp.SetParent(go.transform,false);stamp.anchorMin=stamp.anchorMax=new Vector2(.5f,.5f);stamp.anchoredPosition=new Vector2(-359,-224);stamp.sizeDelta=new Vector2(260,64);stamp.localRotation=Quaternion.Euler(0,0,-7);
+        var stampGo=new GameObject("Verdict stamp",typeof(RectTransform),typeof(CanvasGroup));stamp=stampGo.GetComponent<RectTransform>();stamp.SetParent(go.transform,false);stamp.anchorMin=stamp.anchorMax=new Vector2(.5f,.5f);stamp.anchoredPosition=new Vector2(-359,-252);stamp.sizeDelta=new Vector2(260,64);stamp.localRotation=Quaternion.Euler(0,0,-7);
         stampGroup=stampGo.GetComponent<CanvasGroup>();stampGroup.alpha=0;stampGroup.blocksRaycasts=false;
         stampText=Label("Stamp text",stamp,"",Vector2.zero,new Vector2(252,58),38,Ink);stampText.fontStyle=FontStyles.Bold;stampText.alignment=TextAlignmentOptions.Center;if(displayFont!=null)stampText.font=displayFont;
         Back("Stamp top",stamp,new Vector2(0,31),new Vector2(260,3),Ink);Back("Stamp bottom",stamp,new Vector2(0,-31),new Vector2(260,3),Ink);
@@ -269,7 +322,7 @@ public sealed class SusGame : MonoBehaviour
             return;
         }
         if(state!=State.Title&&state!=State.Summary)return;
-        completed=score=streak=best=correct=maximum=0; recent.Clear(); provider.difficulty=1; tutorial=true; modal.SetActive(false);settingsMenu.SetActive(false);summaryStats.SetActive(false);helpPanel.SetActive(false);legitCorrect=0;System.Array.Clear(tellCounts,0,tellCounts.Length);
+        completed=score=streak=best=correct=maximum=0; recent.Clear(); provider.difficulty=1; tutorial=true; modal.SetActive(false);settingsMenu.SetActive(false);summaryStats.SetActive(false);helpPanel.SetActive(false);careerPanel.SetActive(false);adPreview.SetActive(false);legitCorrect=0;System.Array.Clear(tellCounts,0,tellCounts.Length);
         current=provider.Fallback.Find(c=>c.isSus);provider.ResetShift(current?.id); StartCoroutine(ShowCase());
     }
     IEnumerator PrepareShift()
@@ -292,16 +345,18 @@ public sealed class SusGame : MonoBehaviour
     }
     IEnumerator ShowCase()
     {
+        adPreview.SetActive(false);
         if(stampAnimation!=null){StopCoroutine(stampAnimation);stampAnimation=null;}
         state=State.Moving; selection.interactable=false;continueButton.gameObject.SetActive(false); panel.gameObject.SetActive(true);
         if(current==null){Summary();yield break;}
         header.text=current.product;
         caseMeta.text=(tutorial?"PRACTICE":current.category.ToUpperInvariant()+"  /  "+(completed+1).ToString("00"));
-        feedbackBand.color=Color.clear;evidenceHint.text="";messageUntil=0;stampGroup.alpha=0;clearEvidence.gameObject.SetActive(true);lastEvidenceCount=0;
+        feedbackBand.color=Color.clear;evidenceHint.text="";messageUntil=0;stampGroup.alpha=0;campaignHint.gameObject.SetActive(true);clearEvidence.gameObject.SetActive(true);lastEvidenceCount=0;
         selection.SetText(current.adText);
         feedbackTitle.text=tutorial?"Your first case":"";
         feedback.text=tutorial?"Mark the vague promise. Then choose SUS.":"";
-        Picture(productPicture,current.productImage,current.category,false); Picture(adPicture,current.adImage,current.category,true);
+        Picture(productPicture,current.productImage,current.productResource,current.category,false); Picture(adPicture,current.adImage,current.campaignResource,current.category,true);
+        if(detectiveLine!=null)detectiveLine.text="Inspecting\n"+current.category;
         yield return Slide(CaseOffscreen(-1),restingPanelPosition);
         started=Time.unscaledTime;state=State.Reading;selection.interactable=true;EvidenceChanged();
     }
@@ -314,20 +369,22 @@ public sealed class SusGame : MonoBehaviour
         }
         state=State.Verdict;selection.interactable=false;continueButton.gameObject.SetActive(true);
         bool right=suspicious==current.isSus;int found,falseEvidence;int next=right?streak+1:0;
+        float elapsed=Time.unscaledTime-started;
         int points=CaseScoring.Score(current,suspicious,selection.phrases,next,Time.unscaledTime-started,out found,out falseEvidence);
         if(!tutorial)
         {
-            provider.RecordAnswer(current,right,selection.phrases);
+            provider.RecordAnswer(current,right,selection.phrases);CareerProgress.RecordCase(current,right,selection.phrases,elapsed);
             completed++;maximum+=CaseScoring.Maximum(current,completed);score+=points;streak=next;best=Mathf.Max(best,streak);if(right){correct++;if(!current.isSus)legitCorrect++;}
             foreach(var tell in current.tells)if(selection.phrases.Exists(p=>CaseScoring.Normalize(p)==CaseScoring.Normalize(tell.phrase))){int index=System.Array.IndexOf(new[]{"vague","fake_label","no_proof","tiny_truth","wrong_comparison"},tell.type);if(index>=0)tellCounts[index]++;}
             recent.Add(right);if(recent.Count>5)recent.RemoveAt(0);if(recent.Count==5){int wins=recent.FindAll(v=>v).Count;if(wins>=4)provider.difficulty=Mathf.Min(5,provider.difficulty+1);else if(wins<=2)provider.difficulty=Mathf.Max(1,provider.difficulty-1);}
         }
-        selection.Reveal(current);clearEvidence.gameObject.SetActive(false);
+        selection.Reveal(current);clearEvidence.gameObject.SetActive(false);campaignHint.gameObject.SetActive(false);
         feedbackTitle.text=(right?"Correct verdict":"Verdict corrected")+"  /  "+(current.isSus?"SUS":"LEGIT");
         ReviewEvidence();stampAnimation=StartCoroutine(StampVerdict());
         feedbackBand.color=new Color(.93f,.92f,.87f);
         evidenceHint.text=tutorial?"Practice complete":"+"+points+" points  |  "+found+" found  |  "+falseEvidence+" false marks";
         feedback.text=(right?"Good call. ":"Look closer. ")+current.verdictText;
+        if(presentation!=null)presentation.React(right);if(detectiveLine!=null)detectiveLine.text=right?"Good catch.\nKeep going.":"Review the\nevidence.";
         if(!muted)sound.PlayOneShot(right?good:bad);foreach(var button in verdictButtons)if(button.suspicious==suspicious)button.Pulse();
     }
     public void Continue(){if(state==State.Verdict)StartCoroutine(Next());}
@@ -353,23 +410,21 @@ public sealed class SusGame : MonoBehaviour
     void Summary()
     {
         state=State.Summary;panel.gameObject.SetActive(false);modal.SetActive(true);
-        int xp=correct*10;int total=PlayerPrefs.GetInt("CareerXP",0)+xp;PlayerPrefs.SetInt("CareerXP",total);PlayerPrefs.SetInt("BestScore",Mathf.Max(score,PlayerPrefs.GetInt("BestScore",0)));PlayerPrefs.Save();
-        string rank=total>=600?"Chief of Sus":total>=300?"Senior Inspector":total>=100?"Inspector":"Rookie";
-        string badge=correct==10?"Zero false alarms":legitCorrect>=4?"Certified skeptic":best>=5?"On a roll":"";
-        summaryReward.text="+"+xp+" XP  /  "+rank+(string.IsNullOrEmpty(badge)?"":"\n"+badge);
+        var unlocked=CareerProgress.FinishShift(correct,completed,score);
+        summaryReward.text="+"+(correct*10)+" XP  /  "+CareerProgress.Rank+"\n"+CareerProgress.RankProgress;
         float ratio=maximum>0?(float)score/maximum:0;int stars=ratio>=.9f?3:ratio>=.75f?2:ratio>=.5f?1:0;
         modalTitle.text="Shift complete";
         summaryStats.SetActive(true);summaryNumbers.text=stars+" / 3 stars    "+score+" points    "+correct+" / 10 correct";
         modalBody.rectTransform.anchoredPosition=new Vector2(15,-103);modalBody.rectTransform.sizeDelta=new Vector2(840,246);
         string strongest="";int count=0;var names=new[]{"Vague claims","Self-awarded labels","Unsupported promises","Tiny truths","Unclear comparisons"};
         for(int i=0;i<5;i++)if(tellCounts[i]>count){count=tellCounts[i];strongest=names[i];}
-        modalBody.text="Your shopping checklist\n\nLook for a number. Ask who verified it.\nCheck the scope and the comparison.\n\n"+(count>0?"Best evidence: "+strongest+".":"Next shift: mark the exact words to earn evidence points.")+"\nLegitimate claims recognised: "+legitCorrect+".";
-        modalTitle.text=stars==3?"Sharp detective":stars==2?"Good instincts":"Keep investigating";
+        modalBody.text="Your shopping checklist\n\nLook for a number. Ask who verified it.\nCheck the scope and the comparison.\n\n"+(count>0?"Best evidence: "+strongest+".":"Next shift: mark the exact words to earn evidence points.")+"\nMisleading claims caught: "+CareerProgress.ClaimsCaught+"."+(unlocked.Count>0?"\nNew badges: "+string.Join(", ",unlocked):"");
+        modalTitle.text=stars==3?"Sharp detective":stars==2?"Good instincts":"Keep investigating";if(stars==3&&!reducedMotion)StartCoroutine(Celebrate());
         action.GetComponentInChildren<TMP_Text>().text="Play again";
     }
-    void Picture(RawImage r,Texture2D image,string category,bool ad)
+    void Picture(RawImage r,Texture2D image,string resource,string category,bool ad)
     {
-        if(image==null)image=LocalArt(category,ad);r.texture=image;float ratio=(float)image.width/image.height;float w=268,h=ad?118:215;
+        if(image==null&&!string.IsNullOrEmpty(resource))image=Resources.Load<Texture2D>(resource);if(image==null)image=LocalArt(category,ad);r.texture=image;float ratio=(float)image.width/image.height;float w=ad?288:268,h=ad?192:200;
         r.rectTransform.sizeDelta=ratio>w/h?new Vector2(w,w/ratio):new Vector2(h*ratio,h);
     }
     Texture2D LocalArt(string category,bool ad)
@@ -405,7 +460,7 @@ public sealed class SusGame : MonoBehaviour
         for(int i=0;i<evidenceRows.Count;i++)
         {
             bool active=i<selection.phrases.Count;var row=evidenceRows[i];row.gameObject.SetActive(active);
-            if(active){row.interactable=true;row.GetComponent<Image>().color=new Color(.96f,.86f,.58f);row.GetComponentInChildren<TMP_Text>().text=(i+1)+".  "+selection.phrases[i]+"   ×";}
+            if(active){row.GetComponent<RectTransform>().anchoredPosition=new Vector2(172,-30-i*32);row.GetComponent<RectTransform>().sizeDelta=new Vector2(634,29);row.interactable=true;row.onClick.RemoveAllListeners();int index=i;row.onClick.AddListener(()=>selection.Remove(index));row.GetComponent<Image>().color=new Color(.96f,.86f,.58f);row.GetComponentInChildren<TMP_Text>().text=(i+1)+".  "+selection.phrases[i]+"   ×";}
         }
         if(state==State.Reading&&selection.phrases.Count>lastEvidenceCount&&!muted&&sound!=null)sound.PlayOneShot(markSound);
         lastEvidenceCount=selection.phrases.Count;
@@ -424,8 +479,8 @@ public sealed class SusGame : MonoBehaviour
             {rows.Add("NOT EVIDENCE  "+phrase);colors.Add(new Color(.98f,.85f,.81f));}
         for(int i=0;i<evidenceRows.Count;i++)
         {
-            var row=evidenceRows[i];row.gameObject.SetActive(i<rows.Count);row.interactable=false;
-            if(i<rows.Count){row.GetComponent<Image>().color=colors[i];row.GetComponentInChildren<TMP_Text>().text=rows[i];}
+            var row=evidenceRows[i];row.gameObject.SetActive(i<rows.Count);row.interactable=true;row.onClick.RemoveAllListeners();int detail=i;row.onClick.AddListener(()=>{if(detail<rows.Count){feedbackTitle.text="Evidence review";feedback.text=rows[detail];}});
+            if(i<rows.Count){row.GetComponent<RectTransform>().anchoredPosition=new Vector2(172,-21-i*19);row.GetComponent<RectTransform>().sizeDelta=new Vector2(634,18);row.GetComponent<Image>().color=colors[i];row.GetComponentInChildren<TMP_Text>().text=rows[i];}
         }
     }
     static string TellName(string type)
@@ -437,6 +492,14 @@ public sealed class SusGame : MonoBehaviour
         if(soundButton!=null)soundButton.GetComponentInChildren<TMP_Text>().text=muted?"Sound: off":"Sound: on";
         if(motionButton!=null)motionButton.GetComponentInChildren<TMP_Text>().text=reducedMotion?"Motion: reduced":"Motion: subtle";
         if(textButton!=null)textButton.GetComponentInChildren<TMP_Text>().text=largeText?"Text: large":"Text: standard";
+        if(contrastButton!=null)contrastButton.GetComponentInChildren<TMP_Text>().text=highContrast?"Contrast: high":"Contrast: standard";
+        foreach(var surface in contrastSurfaces)surface.color=highContrast?Color.white:Paper;
+        foreach(var text in FindObjectsByType<TMP_Text>(FindObjectsInactive.Include,FindObjectsSortMode.None))
+        {
+            var canvas=text.GetComponentInParent<Canvas>();if(canvas==null)continue;
+            bool onPaper=text.transform.IsChildOf(modal.transform)||text.transform.IsChildOf(helpPanel.transform)||text.transform.IsChildOf(careerPanel.transform)||(panel!=null&&text.transform.IsChildOf(panel));
+            if(onPaper&&text.color.r<.7f)text.color=highContrast?Color.black:Ink;
+        }
         if(selection!=null){selection.text.fontSizeMax=largeText?40:34;selection.text.fontSizeMin=18;selection.RefreshHighlight();}
     }
     IEnumerator StampVerdict()
@@ -446,6 +509,7 @@ public sealed class SusGame : MonoBehaviour
         foreach(var border in stamp.GetComponentsInChildren<Image>())border.color=ink;
         stampGroup.alpha=1;if(!muted)sound.PlayOneShot(stampSound);
         if(reducedMotion){stamp.localScale=Vector3.one;yield break;}
+        if(mouseLook!=null)mouseLook.StampImpact();StartCoroutine(StampDust());
         for(float t=0;t<.16f;t+=Time.unscaledDeltaTime)
         {float progress=t/.16f;stamp.localScale=Vector3.one*Mathf.Lerp(1.35f,1,1-Mathf.Pow(1-progress,3));yield return null;}
         stamp.localScale=Vector3.one;stampAnimation=null;
@@ -456,5 +520,24 @@ public sealed class SusGame : MonoBehaviour
         for(int i=0;i<samples;i++){previous=Mathf.Lerp(previous,(float)random.NextDouble()*2-1,.28f);values[i]=previous*volume*Mathf.Pow(1-(float)i/samples,2);}
         clip.SetData(values,0);return clip;
     }
-    void OnDestroy(){foreach(var t in art)Destroy(t);foreach(var clip in new[]{good,bad,markSound,stampSound,paperSound})if(clip!=null)Destroy(clip);}
+    IEnumerator Celebrate()
+    {
+        var root=new GameObject("Shift celebration",typeof(RectTransform));root.transform.SetParent(hudStrip.parent,false);root.transform.SetAsLastSibling();
+        var pieces=new List<RectTransform>();var starts=new List<Vector2>();var speeds=new List<Vector2>();
+        float width=((RectTransform)hudStrip.parent).rect.width,height=((RectTransform)hudStrip.parent).rect.height;
+        Color[] palette={new Color(.72f,.82f,.58f),new Color(.95f,.74f,.37f),new Color(.55f,.7f,.65f)};
+        for(int i=0;i<42;i++){var image=Back("Confetti",root.transform,Vector2.zero,new Vector2(8,15),palette[i%3]);pieces.Add(image.rectTransform);starts.Add(new Vector2(Random.Range(-width*.4f,width*.4f),height*.5f+Random.Range(0,140)));speeds.Add(new Vector2(Random.Range(-90,90),Random.Range(220,380)));}
+        for(float t=0;t<2.4f;t+=Time.unscaledDeltaTime)
+        {for(int i=0;i<pieces.Count;i++){pieces[i].anchoredPosition=starts[i]+new Vector2(speeds[i].x*t,-speeds[i].y*t-80*t*t);pieces[i].localRotation=Quaternion.Euler(0,0,t*speeds[i].x*2);}yield return null;}
+        Destroy(root);
+    }
+    IEnumerator StampDust()
+    {
+        var root=new GameObject("Paper dust",typeof(RectTransform));root.transform.SetParent(stamp,false);root.transform.SetAsFirstSibling();
+        var flecks=new List<Image>();var directions=new List<Vector2>();
+        for(int i=0;i<10;i++){flecks.Add(Back("Dust",root.transform,Vector2.zero,new Vector2(Random.Range(3,6),Random.Range(2,4)),new Color(.52f,.49f,.39f,.25f)));directions.Add(new Vector2(Random.Range(-140,140),Random.Range(-45,55)));}
+        for(float t=0;t<.3f;t+=Time.unscaledDeltaTime){foreach(var item in flecks){int i=flecks.IndexOf(item);item.rectTransform.anchoredPosition=directions[i]*(t/.3f);item.color=new Color(.52f,.49f,.39f,.25f*(1-t/.3f));}yield return null;}
+        Destroy(root);
+    }
+    void OnDestroy(){foreach(var t in art)Destroy(t);foreach(var clip in new[]{good,bad,markSound,stampSound,paperSound})if(clip!=null&&clip.name.StartsWith("Bureau"))Destroy(clip);}
 }

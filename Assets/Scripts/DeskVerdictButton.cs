@@ -19,7 +19,8 @@ public sealed class DeskVerdictButton : MonoBehaviour, IPointerEnterHandler, IPo
     }
     public void OnPointerEnter(PointerEventData e){hovering=true;}
     public void OnPointerExit(PointerEventData e){hovering=false;}
-    public void OnPointerClick(PointerEventData e){if(game.CanAnswer&&e.button==PointerEventData.InputButton.Left)game.Answer(suspicious);}
+    // EventSystem and direct-input fallback share one gated raycast and one submission per frame.
+    public void OnPointerClick(PointerEventData e){if(e.button==PointerEventData.InputButton.Left)game.SubmitVerdictPointer(e.position);}
     public void Pulse(){if(!pressing&&isActiveAndEnabled)StartCoroutine(Press());}
     IEnumerator Press()
     {

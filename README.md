@@ -57,7 +57,7 @@ Category mastery requires a correct verdict, every expected evidence phrase, and
 
 ## Remaining release work
 
-Live generation and Cloudflare hosting are verified. Chrome loaded the WebGL runtime, completed practice keyboard selection/verdict/case advance, and resized without errors after scene startup. Local illustrations remain procedural placeholders. Detective character animation, production audio, full cumulative badges, and touch/visual acceptance remain.
+Live generation and Cloudflare hosting are verified. Chrome loaded the WebGL runtime, completed practice keyboard selection/verdict/case advance, and resized without errors after scene startup. Every fallback case now has pre-generated AI product art and a landscape campaign stored locally. The detective radio portrait, original audio, cumulative badges and high-contrast controls are implemented. Final hosted visual/touch acceptance remains.
 
 Typography uses Barlow and Barlow Condensed under the SIL Open Font License; see Assets/Fonts for licenses.
 
@@ -70,3 +70,19 @@ Live verification: compilation, settings containment and input gating, physical 
 ## Release checks, 9 October 2026
 
 The adaptive-agent regression runs in Unity before builds. Server tests cover fenced provider JSON, invalid evidence, malformed requests, service routing and mocked two-image generation. Both selected model IDs were confirmed against the provider listing. One direct live case and one hosted Pages-to-Worker case returned valid metadata and two PNG images. The WebGL output is roughly 20 MB, below the 50 MB target, with each file below 25 MB. Full exception support is enabled for useful browser diagnostics. Wait for Unity splash/scene startup before using test hooks.
+
+## Finished prototype presentation
+
+All 30 local cases include two bundled AI images. Live and bundled campaigns use 3:2 landscape layouts with the exact case copy; click a campaign to read it full size. The selectable Unity claim remains the scoring source. Generated text may have visual imperfections, so use the selectable claim when judging evidence.
+
+The no-splash build includes an animated low-poly detective radio portrait, original swing music and designed marker/paper/stamp/verdict audio, persistent cumulative badges, XP/rank progress, an impact counter, high-contrast controls, and three-star confetti. Motion effects respect reduced-motion mode. The four badge thresholds match the GDD: 20 tiny truths, 10 correct LEGIT calls, a perfect-verdict shift, and five correct cases under ten seconds.
+
+Artwork generated through the configured 1endpoint gpt-image-2 API. Product prompt preserves the clean product-photo direction. Campaign prompt asks for a completed landscape print advert, brand name, exact headline/body copy, and no invented environmental claims. Prompt definitions are in functions/api/cases.js. All 60 saved JPEG assets are in Assets/Resources/CaseArt.
+
+Campaign quality review: all 30 final ads are landscape and readable, with no extra environmental claims flagged. One ad omits a final period; its claim wording is intact. The selected Unity text remains authoritative for scoring. Failed training verdicts remain in Reading state; physical EventSystem input and direct mouse/touch fallback share a gated raycast handler.
+
+## Completed feature release
+
+Training regression verified in Unity and Chrome: empty SUS attempt leaves practice playable, then exact phrase highlighting and a physical SUS retry reaches the correct verdict. All 60 AI images are saved locally and all 30 campaigns are readable 3:2 ads. Generated ads were reviewed and edited to remove extra environmental claims; one final period is missing in GlowRoot, without changing its claim. Keyboard/UI focus is cleared after button actions so Space remains the marker control.
+
+Release checks cover all bundled image paths, campaign shape, all four cumulative badge thresholds, rank/XP progress, adaptive learning, and server request validation. A complete offline browser shift reached its summary without Unity exceptions. The prototype uses procedural portrait poses on the supplied low-poly character rather than custom authored character animation clips. Desktop and touch campaign input are checked; broader physical-device acceptance remains useful.

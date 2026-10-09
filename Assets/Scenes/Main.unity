@@ -310,7 +310,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 3758096383
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -424,6 +424,7 @@ GameObject:
   - component: {fileID: 383827879}
   - component: {fileID: 383827878}
   - component: {fileID: 383827877}
+  - component: {fileID: 383827880}
   m_Layer: 0
   m_Name: Sus-tainable Game
   m_TagString: Untagged
@@ -449,6 +450,7 @@ MonoBehaviour:
   muted: 0
   bodyFont: {fileID: 11400000, guid: 8b168ce67f77cc24193cac3c2a687d04, type: 2}
   displayFont: {fileID: 11400000, guid: 616edd57182a61e4ca54b1e16ec1e352, type: 2}
+  presentation: {fileID: 383827880}
 --- !u!114 &383827878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -464,6 +466,13 @@ MonoBehaviour:
   endpoint: 
   offlineOnly: 0
   difficulty: 1
+  adaptiveSettings:
+    minimumWeight: 0.5
+    maximumWeight: 2
+    weightSensitivity: 2
+    recentWindow: 5
+    recentCaseMemory: 20
+    repeatCategoryFactor: 0.35
 --- !u!4 &383827879
 Transform:
   m_ObjectHideFlags: 0
@@ -479,6 +488,27 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &383827880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 383827876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9e03ee51a8d72040aa301df5dce9aa3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DeskPresentation
+  detectivePrefab: {fileID: 128674, guid: 471247d5cf89b2c46bcde0f08524197e, type: 3}
+  music: {fileID: 8300000, guid: 92cfdffcbdd17634cb34733dc0dc4721, type: 3}
+  marker: {fileID: 8300000, guid: 980a893a7d37ced4ebefbd371882d547, type: 3}
+  paper: {fileID: 8300000, guid: f32d2ec933f39d647bf76ca0d8cf5d5f, type: 3}
+  stamp: {fileID: 8300000, guid: 5c4e8eb53fe02d34093f202e31746ea7, type: 3}
+  correct: {fileID: 8300000, guid: 09c46fe322c72d44f9fb6c59744e3afa, type: 3}
+  wrong: {fileID: 8300000, guid: 7c895703c34c36845a5204418e054a1f, type: 3}
+  officeSurface: {fileID: 2100000, guid: 16eae4f657460214595b0a80aae5db57, type: 2}
+  windowSurface: {fileID: 2100000, guid: 05401b1df712b6542924a58cfc3f5245, type: 2}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0

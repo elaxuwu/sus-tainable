@@ -14,6 +14,8 @@ public sealed class DeskMouseLook : MonoBehaviour
     [Min(0.01f)] public float smoothTime = 0.06f;
     public bool lookEnabled = true;
     public bool holdLook;
+    float impactUntil;
+    public void StampImpact(){impactUntil=Time.unscaledTime+.12f;}
 
     private Quaternion startingRotation;
     private Vector2 angles;
@@ -49,7 +51,9 @@ public sealed class DeskMouseLook : MonoBehaviour
 
         angles.x = Mathf.SmoothDamp(angles.x, targetAngles.x, ref velocity.x, smoothTime, Mathf.Infinity, Time.unscaledDeltaTime);
         angles.y = Mathf.SmoothDamp(angles.y, targetAngles.y, ref velocity.y, smoothTime, Mathf.Infinity, Time.unscaledDeltaTime);
-        transform.localRotation = startingRotation * Quaternion.Euler(-angles.y, angles.x, 0f);
+        float remaining=Mathf.Clamp01((impactUntil-Time.unscaledTime)/.12f);
+        float impact=lookEnabled?Mathf.Sin(Time.unscaledTime*120)*remaining*.12f:0;
+        transform.localRotation = startingRotation * Quaternion.Euler(-angles.y+impact, angles.x, 0f);
     }
 
     public static float MapOutsideDeadZone(float position, float zone)

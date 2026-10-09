@@ -1,0 +1,386 @@
+[
+  {
+    "id": "local_00",
+    "type": "product",
+    "prompt": "Fictional product OceanSip Bottle in category drinks. The case copy is: Our planet-friendly bottle is naturally better.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_00",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product OceanSip Bottle in category drinks. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Our planet-friendly bottle is naturally better.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024"
+  },
+  {
+    "id": "local_01",
+    "type": "product",
+    "prompt": "Fictional product TideCup in category drinks. The case copy is: Our leaf badge proves it: approved by the TideCup Green Team.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_01",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product TideCup in category drinks. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Our leaf badge proves it: approved by the TideCup Green Team.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_02",
+    "type": "product",
+    "prompt": "Fictional product ReedRush Flask in category drinks. The case copy is: Zero impact hydration. No lifecycle report needed.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_02",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product ReedRush Flask in category drinks. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Zero impact hydration. No lifecycle report needed.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_03",
+    "type": "product",
+    "prompt": "Fictional product DewDrop Carton in category drinks. The case copy is: Now 30% less plastic. Lighter on the planet.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_03",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product DewDrop Carton in category drinks. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Now 30% less plastic. Lighter on the planet.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_04",
+    "type": "product",
+    "prompt": "Fictional product LoopTin in category drinks. The case copy is: This bottle body contains 80% recycled aluminium by mass. The case includes an independent materials audit verifying that amount. The cap is excluded.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_04",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product LoopTin in category drinks. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"This bottle body contains 80% recycled aluminium by mass. The case includes an independent materials audit verifying that amount. The cap is excluded.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_05",
+    "type": "product",
+    "prompt": "Fictional product StreamBox in category drinks. The case copy is: The new 500 ml carton uses 12 g of plastic instead of 15 g in our previous 500 ml carton. An independent packaging audit in this case verifies both measurements.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_05",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product StreamBox in category drinks. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"The new 500 ml carton uses 12 g of plastic instead of 15 g in our previous 500 ml carton. An independent packaging audit in this case verifies both measurements.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_06",
+    "type": "product",
+    "prompt": "Fictional product MossGlow Shampoo in category cosmetics. The case copy is: Certified Green by Our Own Awesome Team.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_06",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product MossGlow Shampoo in category cosmetics. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Certified Green by Our Own Awesome Team.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_07",
+    "type": "product",
+    "prompt": "Fictional product FernFoam in category cosmetics. The case copy is: All-natural care that is harmless to every river.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_07",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product FernFoam in category cosmetics. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"All-natural care that is harmless to every river.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_08",
+    "type": "product",
+    "prompt": "Fictional product SoftSprout Lotion in category cosmetics. The case copy is: Our box is recycled, so the whole lotion is sustainable.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_08",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product SoftSprout Lotion in category cosmetics. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Our box is recycled, so the whole lotion is sustainable.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_09",
+    "type": "product",
+    "prompt": "Fictional product GlowRoot Soap in category cosmetics. The case copy is: Twice as sustainable. No comparison needed.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_09",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product GlowRoot Soap in category cosmetics. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Twice as sustainable. No comparison needed.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_10",
+    "type": "product",
+    "prompt": "Fictional product PetalPump in category cosmetics. The case copy is: Our new empty 250 ml bottle weighs 20 g, compared with 25 g for the previous 250 ml bottle. An independent packaging audit in this case verifies the measurements.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_10",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product PetalPump in category cosmetics. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Our new empty 250 ml bottle weighs 20 g, compared with 25 g for the previous 250 ml bottle. An independent packaging audit in this case verifies the measurements.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_11",
+    "type": "product",
+    "prompt": "Fictional product ClearLeaf in category cosmetics. The case copy is: The outer carton contains 70% recycled paper by mass, verified by an independent paper audit supplied in the case. The bottle and pump are outside this claim.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_11",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product ClearLeaf in category cosmetics. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"The outer carton contains 70% recycled paper by mass, verified by an independent paper audit supplied in the case. The bottle and pump are outside this claim.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_12",
+    "type": "product",
+    "prompt": "Fictional product ThreadLoop Jacket in category fashion. The case copy is: Eco-conscious style. Wear it and save the planet.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_12",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product ThreadLoop Jacket in category fashion. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Eco-conscious style. Wear it and save the planet.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_13",
+    "type": "product",
+    "prompt": "Fictional product CloudWeave in category fashion. The case copy is: Our jacket button is made from recycled plastic. That makes the entire jacket circular.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_13",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product CloudWeave in category fashion. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Our jacket button is made from recycled plastic. That makes the entire jacket circular.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_14",
+    "type": "product",
+    "prompt": "Fictional product PineThread in category fashion. The case copy is: Certified Earth Kind, awarded by PineThread itself.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_14",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product PineThread in category fashion. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Certified Earth Kind, awarded by PineThread itself.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_15",
+    "type": "product",
+    "prompt": "Fictional product TrailFold in category fashion. The case copy is: Our greenest shirt yet, with 40% less water.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_15",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product TrailFold in category fashion. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Our greenest shirt yet, with 40% less water.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_16",
+    "type": "product",
+    "prompt": "Fictional product PatchHarbor in category fashion. The case copy is: The shell fabric is 60% recycled polyester by mass. An independent fibre audit supplied in this case verifies the shell. Lining, zips, and buttons are excluded.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_16",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product PatchHarbor in category fashion. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"The shell fabric is 60% recycled polyester by mass. An independent fibre audit supplied in this case verifies the shell. Lining, zips, and buttons are excluded.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024"
+  },
+  {
+    "id": "local_17",
+    "type": "product",
+    "prompt": "Fictional product WovenArc in category fashion. The case copy is: This repair programme replaces damaged jacket zips for five years. The case supplies published terms and a completed repair record. No claim about total carbon impact is made.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_17",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product WovenArc in category fashion. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"This repair programme replaces damaged jacket zips for five years. The case supplies published terms and a completed repair record. No claim about total carbon impact is made.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024"
+  },
+  {
+    "id": "local_18",
+    "type": "product",
+    "prompt": "Fictional product SunCrumb in category snacks. The case copy is: Naturally planet-positive snacks. Every bite cancels your footprint.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_18",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product SunCrumb in category snacks. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Naturally planet-positive snacks. Every bite cancels your footprint.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024"
+  },
+  {
+    "id": "local_19",
+    "type": "product",
+    "prompt": "Fictional product BerryParcel in category snacks. The case copy is: The shipping label is compostable, so our whole snack pack disappears safely in nature.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_19",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product BerryParcel in category snacks. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"The shipping label is compostable, so our whole snack pack disappears safely in nature.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_20",
+    "type": "product",
+    "prompt": "Fictional product SeedSquare in category snacks. The case copy is: Our wrapper is 50% greener. Than what? That is our secret.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_20",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product SeedSquare in category snacks. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Our wrapper is 50% greener. Than what? That is our secret.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_21",
+    "type": "product",
+    "prompt": "Fictional product OrchardPop in category snacks. The case copy is: Approved Sustainable by the OrchardPop Appreciation Club.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_21",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product OrchardPop in category snacks. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Approved Sustainable by the OrchardPop Appreciation Club.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_22",
+    "type": "product",
+    "prompt": "Fictional product OatPost in category snacks. The case copy is: The new 100 g snack carton weighs 18 g, compared with 24 g previously. An independent packaging audit supplied in the case confirms the weights. The snack recipe is unchanged.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_22",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product OatPost in category snacks. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"The new 100 g snack carton weighs 18 g, compared with 24 g previously. An independent packaging audit supplied in the case confirms the weights. The snack recipe is unchanged.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_23",
+    "type": "product",
+    "prompt": "Fictional product FruitFold in category snacks. The case copy is: The delivery box contains 85% recycled paper by mass. An independent paper audit is supplied in this case. The inner food-safe pouch is not included.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_23",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product FruitFold in category snacks. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"The delivery box contains 85% recycled paper by mass. An independent paper audit is supplied in this case. The inner food-safe pouch is not included.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024"
+  },
+  {
+    "id": "local_24",
+    "type": "product",
+    "prompt": "Fictional product VoltNest Charger in category tech. The case copy is: The totally green charger. Unlimited use, zero environmental cost.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_24",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product VoltNest Charger in category tech. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"The totally green charger. Unlimited use, zero environmental cost.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_25",
+    "type": "product",
+    "prompt": "Fictional product CircuitBloom in category tech. The case copy is: Our cardboard insert is recycled. Therefore the entire device is sustainable.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_25",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product CircuitBloom in category tech. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Our cardboard insert is recycled. Therefore the entire device is sustainable.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_26",
+    "type": "product",
+    "prompt": "Fictional product BrightDock in category tech. The case copy is: Uses 35% less energy than other chargers. We have not stated which ones.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_26",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product BrightDock in category tech. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Uses 35% less energy than other chargers. We have not stated which ones.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_27",
+    "type": "product",
+    "prompt": "Fictional product LeafSignal in category tech. The case copy is: Certified Carbon Free by the LeafSignal Marketing Department.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_27",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product LeafSignal in category tech. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Certified Carbon Free by the LeafSignal Marketing Department.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  },
+  {
+    "id": "local_28",
+    "type": "product",
+    "prompt": "Fictional product RepairRelay in category tech. The case copy is: The battery can be replaced using two screws. The case supplies a repair manual, spare-part listing, and demonstration. This is a repairability claim, not a total-impact claim.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_28",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product RepairRelay in category tech. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"The battery can be replaced using two screws. The case supplies a repair manual, spare-part listing, and demonstration. This is a repairability claim, not a total-impact claim.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024"
+  },
+  {
+    "id": "local_29",
+    "type": "product",
+    "prompt": "Fictional product QuietCurrent in category tech. The case copy is: Standby power is 0.2 W under the stated lab test, compared with 0.5 W for the previous model under the same test. An independent test report is supplied in the case.. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.",
+    "size": "1024x1024"
+  },
+  {
+    "id": "local_29",
+    "type": "campaign",
+    "prompt": "Use case: ads-marketing. Deliver a finished LANDSCAPE 3:2 advertising campaign for the fictional product QuietCurrent in category tech. This is an actual print advertisement, not a second product photograph. Design a strong brand name, prominent exact headline, complete readable body copy, product hero photography and editorial composition. Use typography, colour and visual hierarchy appropriate to the category. Exact copy to typeset, verbatim: \"Standby power is 0.2 W under the stated lab test, compared with 0.5 W for the previous model under the same test. An independent test report is supplied in the case.\". Preserve every number, unit, percentage, scope limitation and comparison from this copy. You may break the exact copy across headline and body but must not invent additional sustainability claims, evidence, labels or certifications. If the copy describes a self-awarded label, the badge may show that exact self-awarded wording. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or mockup frames. All copy must remain inside 8 percent safe margins and be legible at a small display. Fill the rectangular canvas with a deliberate advertisement, not an image inside a border. Fictional brands only.",
+    "size": "1536x1024",
+    "postprocess": "Image edit: preserve product/layout; remove all visible wording except brand and exact complete case copy."
+  }
+]

@@ -38,8 +38,14 @@ async function call(env, route, body, limit = 65536) {
   const result = await fetch(base.replace(/\/$/, '') + route, {method:'POST', headers:{'Content-Type':'application/json', Authorization:'Bearer ' + env.ONEENDPOINT_API_KEY}, body:JSON.stringify(body), signal:AbortSignal.timeout(90000)});
   return boundedJson(result, limit);
 }
-async function image(env, prompt) {
-  const result = await call(env, '/images/generations', {model:env.IMAGE_MODEL || 'gpt-image-2', prompt, n:1, size:'1024x1024', output_format:'png', response_format:'b64_json'}, 12000000);
+export function productPrompt(c) {
+  return 'Fictional product '+c.product+' in category '+c.category+'. The case copy is: '+c.adText+'. Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.';
+}
+export function campaignPrompt(c) {
+  return 'Use case: ads-marketing. Finished LANDSCAPE 3:2 print advertisement for the fictional '+c.category+' product '+c.product+'. Product hero photography, brand lockup, prominent headline and restrained editorial design. ALL VISIBLE TEXT IS STRICTLY LIMITED TO THESE TWO STRINGS: brand '+JSON.stringify(c.product)+' and exact complete case copy '+JSON.stringify(c.adText)+'. Typeset the case copy verbatim as headline/body with every number, unit, punctuation mark, comparison and scope exclusion. No other visible text anywhere, including packaging, background or badges. No new slogans, taglines, claims, credentials, percentages, feature lists, seals, recycling symbols, product weights, calls to action, lifestyle promises, nature promises or filler. Package may be unlabelled except for the brand. Do not add environmental claims. All text inside 8 percent safe margins, readable type, use whitespace instead of invented copy. This is an actual print advertisement, not a second product photograph. Never show SUS, LEGIT, greenwashing, answers, detective, interface controls or frames.';
+}
+export async function generateImage(env, prompt, size='1024x1024') {
+  const result = await call(env, '/images/generations', {model:env.IMAGE_MODEL || 'gpt-image-2', prompt, n:1, size, output_format:'png', response_format:'b64_json'}, 12000000);
   const data = result.data?.[0]?.b64_json;
   if (typeof data !== 'string' || data.length > 11000000 || !/^[A-Za-z0-9+/=\r\n]+$/.test(data)) throw new Error('Invalid image response');
   return 'data:image/png;base64,' + data;
@@ -68,10 +74,9 @@ export async function onRequestPost(context) {
     const ads=[];
     for (const c of cases) {
       c.id=crypto.randomUUID(); c.difficulty=difficulty;
-      const visual='Fictional product '+c.product+' in category '+c.category+'. The case copy is: '+c.adText+'. '; 
       [c.imageUrl,c.adImageUrl]=await Promise.all([
-        image(env,visual+'Create a premium clean product photograph on a simple background. No written text, no environmental certification symbols, no real brand logos.'),
-        image(env,visual+'Create a matching advertisement visual with the same product design and an editorial composition. Leave open space for game-rendered text. No written words, no real logos, no extra sustainability claims or badges.')
+        generateImage(env,productPrompt(c)),
+        generateImage(env,campaignPrompt(c),'1536x1024')
       ]);
       ads.push(c);
     }

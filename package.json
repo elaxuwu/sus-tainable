@@ -4,6 +4,7 @@
   "type": "module",
   "overrides": { "sharp": "0.35.5" },
   "scripts": {
+    "build": "echo 'Using prebuilt WebGL bundle in public/'",
     "test": "node --test tests/backend.test.js"
   },
   "devDependencies": {

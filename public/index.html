@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sus-tainable · Bureau of Sus</title>
+  <style>
+    *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#121c1c;color:#f4f4ed;font-family:system-ui,sans-serif}
+    canvas{display:block;width:100%;height:100%;outline:none}
+    #loading{position:fixed;inset:0;display:grid;place-items:center;background:#121c1c;z-index:2}
+    .intro{width:min(420px,85vw)}h1{font-size:clamp(32px,5vw,48px);margin:0 0 12px;letter-spacing:-.035em}
+    p{color:#c4d1c9;line-height:1.6}.track{height:3px;background:#304440;margin:28px 0 12px}#progress{height:100%;width:0;background:#a8c68b}
+    a{color:#d1e6bb;text-underline-offset:4px}#message{font-size:14px}#retry{display:none}
+  </style>
+</head>
+<body>
+  <canvas id="unity-canvas" tabindex="0" aria-label="Sus-tainable detective game"></canvas>
+  <div id="loading"><div class="intro">
+    <h1>Sus-tainable</h1><p>Your desk is getting ready.</p>
+    <div class="track"><div id="progress"></div></div><p id="message">Loading game…</p>
+    <p id="retry"><a href="?offline=1">Try the local case archive</a></p>
+  </div></div>
+  <script src="Build/public.loader.js"></script>
+  <script>
+    const canvas=document.getElementById('unity-canvas');
+    createUnityInstance(canvas,{
+      dataUrl:'Build/public.data.unityweb',
+      frameworkUrl:'Build/public.framework.js.unityweb',
+      codeUrl:'Build/public.wasm.unityweb',
+      streamingAssetsUrl:'StreamingAssets',companyName:'Bureau of Sus',productName:'Sus-tainable',productVersion:'0.1.0',
+      devicePixelRatio:Math.min(window.devicePixelRatio||1,1.5)
+    },progress=>{
+      document.getElementById('progress').style.width=Math.round(progress*100)+'%';
+      document.getElementById('message').textContent='Loading game · '+Math.round(progress*100)+'%';
+    }).then(instance=>{
+      window.unityInstance=instance;window.gameReady=true;
+      document.getElementById('loading').remove();canvas.focus();
+    }).catch(()=>{
+      document.getElementById('message').textContent='The game could not start. Refresh the page or try another browser.';
+      document.getElementById('retry').style.display='block';
+    });
+  </script>
+</body>
+</html>

@@ -14,7 +14,9 @@
         }
       ],
       "verdictText": "Planet-friendly does not say what improved or offer evidence.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_00-product",
+      "campaignResource": "CaseArt/local_00-campaign"
     },
     {
       "id": "local_01",
@@ -30,7 +32,9 @@
         }
       ],
       "verdictText": "The seller awarded its own badge. That is not independent verification.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_01-product",
+      "campaignResource": "CaseArt/local_01-campaign"
     },
     {
       "id": "local_02",
@@ -46,7 +50,9 @@
         }
       ],
       "verdictText": "Zero impact is a sweeping promise without a defined scope or evidence.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_02-product",
+      "campaignResource": "CaseArt/local_02-campaign"
     },
     {
       "id": "local_03",
@@ -62,7 +68,9 @@
         }
       ],
       "verdictText": "Thirty percent less than which carton? A comparison needs a baseline.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_03-product",
+      "campaignResource": "CaseArt/local_03-campaign"
     },
     {
       "id": "local_04",
@@ -72,7 +80,9 @@
       "isSus": false,
       "tells": [],
       "verdictText": "The claim states an amount, the bottle-body scope, and verification. It does not cover the cap.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_04-product",
+      "campaignResource": "CaseArt/local_04-campaign"
     },
     {
       "id": "local_05",
@@ -82,7 +92,9 @@
       "isSus": false,
       "tells": [],
       "verdictText": "A same-size comparison, measured quantities, and verification support this packaging claim.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_05-product",
+      "campaignResource": "CaseArt/local_05-campaign"
     },
     {
       "id": "local_06",
@@ -98,7 +110,9 @@
         }
       ],
       "verdictText": "An official-looking phrase means little when the certification is awarded by the seller.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_06-product",
+      "campaignResource": "CaseArt/local_06-campaign"
     },
     {
       "id": "local_07",
@@ -119,7 +133,9 @@
         }
       ],
       "verdictText": "Natural describes no measured environmental benefit. The river promise also has no supporting evidence.",
-      "difficulty": 2
+      "difficulty": 2,
+      "productResource": "CaseArt/local_07-product",
+      "campaignResource": "CaseArt/local_07-campaign"
     },
     {
       "id": "local_08",
@@ -135,7 +151,9 @@
         }
       ],
       "verdictText": "A recycled box does not establish the impact of the lotion or its ingredients.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_08-product",
+      "campaignResource": "CaseArt/local_08-campaign"
     },
     {
       "id": "local_09",
@@ -151,7 +169,9 @@
         }
       ],
       "verdictText": "Twice as sustainable needs a measure and a named comparison.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_09-product",
+      "campaignResource": "CaseArt/local_09-campaign"
     },
     {
       "id": "local_10",
@@ -161,7 +181,9 @@
       "isSus": false,
       "tells": [],
       "verdictText": "The claim compares the same bottle size and includes measured, verified packaging weights.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_10-product",
+      "campaignResource": "CaseArt/local_10-campaign"
     },
     {
       "id": "local_11",
@@ -171,7 +193,9 @@
       "isSus": false,
       "tells": [],
       "verdictText": "The carton claim has a measured amount, evidence, and a clear scope.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_11-product",
+      "campaignResource": "CaseArt/local_11-campaign"
     },
     {
       "id": "local_12",
@@ -192,7 +216,9 @@
         }
       ],
       "verdictText": "The ad supplies neither a specific improvement nor evidence for its enormous promise.",
-      "difficulty": 2
+      "difficulty": 2,
+      "productResource": "CaseArt/local_12-product",
+      "campaignResource": "CaseArt/local_12-campaign"
     },
     {
       "id": "local_13",
@@ -208,7 +234,9 @@
         }
       ],
       "verdictText": "One recycled button does not establish a circular system for the entire jacket.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_13-product",
+      "campaignResource": "CaseArt/local_13-campaign"
     },
     {
       "id": "local_14",
@@ -224,7 +252,9 @@
         }
       ],
       "verdictText": "The brand gives itself the certification. Independent evidence is missing.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_14-product",
+      "campaignResource": "CaseArt/local_14-campaign"
     },
     {
       "id": "local_15",
@@ -240,7 +270,9 @@
         }
       ],
       "verdictText": "Water use is not comparable without a production boundary and a baseline.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_15-product",
+      "campaignResource": "CaseArt/local_15-campaign"
     },
     {
       "id": "local_16",
@@ -250,7 +282,9 @@
       "isSus": false,
       "tells": [],
       "verdictText": "The amount and shell-only scope are specific, and an independent audit supports them.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_16-product",
+      "campaignResource": "CaseArt/local_16-campaign"
     },
     {
       "id": "local_17",
@@ -260,7 +294,9 @@
       "isSus": false,
       "tells": [],
       "verdictText": "A specific, documented repair service is supported. It makes no unsupported whole-product promise.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_17-product",
+      "campaignResource": "CaseArt/local_17-campaign"
     },
     {
       "id": "local_18",
@@ -281,7 +317,9 @@
         }
       ],
       "verdictText": "The phrase defines no benefit, and the footprint claim needs much more evidence.",
-      "difficulty": 2
+      "difficulty": 2,
+      "productResource": "CaseArt/local_18-product",
+      "campaignResource": "CaseArt/local_18-campaign"
     },
     {
       "id": "local_19",
@@ -297,7 +335,9 @@
         }
       ],
       "verdictText": "A shipping label does not establish how every part of the snack pack behaves.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_19-product",
+      "campaignResource": "CaseArt/local_19-campaign"
     },
     {
       "id": "local_20",
@@ -313,7 +353,9 @@
         }
       ],
       "verdictText": "Greener is not a defined measurement, and the comparison is deliberately hidden.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_20-product",
+      "campaignResource": "CaseArt/local_20-campaign"
     },
     {
       "id": "local_21",
@@ -329,7 +371,9 @@
         }
       ],
       "verdictText": "A promotional club is not independent environmental verification.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_21-product",
+      "campaignResource": "CaseArt/local_21-campaign"
     },
     {
       "id": "local_22",
@@ -339,7 +383,9 @@
       "isSus": false,
       "tells": [],
       "verdictText": "The same product size, packaging weights, and independent record support the limited claim.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_22-product",
+      "campaignResource": "CaseArt/local_22-campaign"
     },
     {
       "id": "local_23",
@@ -349,7 +395,9 @@
       "isSus": false,
       "tells": [],
       "verdictText": "The box claim is measured, verified, and clearly excludes the inner pouch.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_23-product",
+      "campaignResource": "CaseArt/local_23-campaign"
     },
     {
       "id": "local_24",
@@ -370,7 +418,9 @@
         }
       ],
       "verdictText": "The wording gives no defined benefit and ignores the evidence needed for a zero-impact promise.",
-      "difficulty": 2
+      "difficulty": 2,
+      "productResource": "CaseArt/local_24-product",
+      "campaignResource": "CaseArt/local_24-campaign"
     },
     {
       "id": "local_25",
@@ -386,7 +436,9 @@
         }
       ],
       "verdictText": "An insert tells you little about the device, its manufacture, or its electricity use.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_25-product",
+      "campaignResource": "CaseArt/local_25-campaign"
     },
     {
       "id": "local_26",
@@ -402,7 +454,9 @@
         }
       ],
       "verdictText": "A fair energy comparison needs named devices and the same test conditions.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_26-product",
+      "campaignResource": "CaseArt/local_26-campaign"
     },
     {
       "id": "local_27",
@@ -418,7 +472,9 @@
         }
       ],
       "verdictText": "Marketing awarded its own badge. No independent carbon evidence is supplied.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_27-product",
+      "campaignResource": "CaseArt/local_27-campaign"
     },
     {
       "id": "local_28",
@@ -428,7 +484,9 @@
       "isSus": false,
       "tells": [],
       "verdictText": "The specific battery-replacement claim has practical evidence and a limited scope.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_28-product",
+      "campaignResource": "CaseArt/local_28-campaign"
     },
     {
       "id": "local_29",
@@ -438,7 +496,9 @@
       "isSus": false,
       "tells": [],
       "verdictText": "Both models use the same test conditions, with measured power and independent evidence.",
-      "difficulty": 1
+      "difficulty": 1,
+      "productResource": "CaseArt/local_29-product",
+      "campaignResource": "CaseArt/local_29-campaign"
     }
   ]
 }

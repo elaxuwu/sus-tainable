@@ -6,6 +6,7 @@ using UnityEngine;
 [Serializable] public class CaseData
 {
     public string id, product, category, adText, verdictText, imageUrl, adImageUrl;
+    public string productResource, campaignResource;
     public bool isSus;
     public int difficulty = 1;
     public CaseTell[] tells;

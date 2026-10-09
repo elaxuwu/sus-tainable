@@ -7,8 +7,11 @@ public static class SusBuild
     [MenuItem("Sus-tainable/Build WebGL")]
     public static void WebGL()
     {
+        ReleaseSetup.Prepare();
         VerifyRelease();
         PlayerSettings.productName="Sus-tainable";
+        PlayerSettings.SplashScreen.show=false;
+        PlayerSettings.SplashScreen.showUnityLogo=false;
         PlayerSettings.runInBackground=true;
         PlayerSettings.WebGL.compressionFormat=WebGLCompressionFormat.Gzip;
         PlayerSettings.WebGL.decompressionFallback=true;
@@ -29,6 +32,7 @@ public static class SusBuild
     public static void VerifyRelease()
     {
         Debug.Log(Verify());
+        ReleaseSetup.VerifyArtAndCareer();
         typeof(AdaptiveAgentTests).GetMethod("RunAll",System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Static).Invoke(null,null);
     }
     [MenuItem("Sus-tainable/Verify Case Content and Scoring")]

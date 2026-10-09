@@ -9,15 +9,15 @@ node_modules/
 .dev.vars.*
 .env
 .env.*
-public/
 Backups/
 
 # Local version-control metadata and generated IDE/build files
 .plastic/
 .vs/
 .vscode/
-Build/
-Builds/
+/Build/
+/Builds/
+!public/Build/
 *.csproj
 *.sln
 *.slnx

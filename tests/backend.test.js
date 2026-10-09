@@ -1,10 +1,16 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {validateCase,onRequestPost,parseCaseJson} from '../functions/api/cases.js';
+import {validateCase,onRequestPost,parseCaseJson,campaignPrompt,productPrompt} from '../functions/api/cases.js';
 const valid={product:'MossGlow',category:'cosmetics',adText:'Planet-friendly shampoo.',isSus:true,tells:[{phrase:'Planet-friendly',type:'vague'}],verdictText:'No measured evidence.'};
 test('provider fenced JSON is accepted without accepting arbitrary prose',()=>{
   assert.deepEqual(parseCaseJson('\x60\x60\x60json\n{"ads":[]}\n\x60\x60\x60'),{ads:[]});
   assert.throws(()=>parseCaseJson('Here is the result: {"ads":[]}'));
+});
+test('campaign prompt requests a landscape advert with exact copy and no invented claims',()=>{
+  const prompt=campaignPrompt(valid);
+  assert.match(prompt,/LANDSCAPE 3:2/);assert.ok(prompt.includes(JSON.stringify(valid.adText)));
+  assert.match(prompt,/actual print advertisement/);assert.match(prompt,/No other visible text anywhere/);
+  assert.match(productPrompt(valid),/premium clean product photograph/);
 });
 test('invalid evidence and verdicts are rejected',()=>{
   assert.equal(validateCase(valid),true);
@@ -34,6 +40,7 @@ test('one text case and two image responses become a playable case',async()=>{
     const body=JSON.parse(options.body);
     if(url.endsWith('/chat/completions'))return Response.json({choices:[{message:{content:JSON.stringify({ads:[valid]})}}]});
     assert.equal(body.n,1);assert.equal(body.response_format,'b64_json');
+    assert.ok(['1024x1024','1536x1024'].includes(body.size));
     return Response.json({data:[{b64_json:'iVBORw0KGgo='}]});
   };
   try {
