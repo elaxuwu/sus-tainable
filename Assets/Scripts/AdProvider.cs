@@ -10,14 +10,18 @@ public sealed class AdProvider : MonoBehaviour
     public string endpoint = "";
     public bool offlineOnly;
     public int difficulty = 1;
+    public AdaptiveAgentSettings adaptiveSettings = new AdaptiveAgentSettings();
     public string Status { get; private set; } = "LOCAL CASE ARCHIVE";
     public int ReadyCount => queue.Count;
     public bool IsFetching => fetching;
     public List<CaseData> Fallback { get; private set; } = new List<CaseData>();
     readonly Queue<CaseData> queue = new Queue<CaseData>();
     readonly HashSet<string> used = new HashSet<string>();
-    readonly Queue<CaseData> localShift=new Queue<CaseData>();
     readonly List<Texture2D> textures = new List<Texture2D>();
+    AdaptiveCategoryAgent adaptiveAgent;
+    int susRemaining = 6;
+    int legitRemaining = 4;
+    int shiftTaken;
     bool fetching;
     float nextRetry;
     void Awake()
@@ -28,6 +32,9 @@ public sealed class AdProvider : MonoBehaviour
             try{var batch = JsonUtility.FromJson<CaseBatch>(source.text);
             if(batch?.ads!=null)foreach (var item in batch.ads) if (item!=null&&item.IsValid()) Fallback.Add(item);}catch(Exception){Debug.LogWarning("Local case archive is invalid.");}
         }
+        var categories = new List<string>();
+        foreach (var item in Fallback) if (item != null && !string.IsNullOrWhiteSpace(item.category) && !categories.Contains(item.category)) categories.Add(item.category);
+        adaptiveAgent = new AdaptiveCategoryAgent(categories, adaptiveSettings);
         if (Application.platform == RuntimePlatform.WebGLPlayer && string.IsNullOrEmpty(endpoint)) endpoint = "/api/cases";
     }
     void Update()
@@ -36,26 +43,52 @@ public sealed class AdProvider : MonoBehaviour
     }
     public void ResetShift(string practiceId=null)
     {
-        used.Clear();localShift.Clear();if(!string.IsNullOrEmpty(practiceId))used.Add(practiceId);
-        var sus=Fallback.FindAll(c=>c.isSus&&!used.Contains(c.id));var legit=Fallback.FindAll(c=>!c.isSus&&!used.Contains(c.id));
-        Shuffle(sus);Shuffle(legit);var deck=new List<CaseData>();deck.AddRange(sus.GetRange(0,Mathf.Min(6,sus.Count)));deck.AddRange(legit.GetRange(0,Mathf.Min(4,legit.Count)));Shuffle(deck);
-        foreach(var item in deck)localShift.Enqueue(item);
+        used.Clear();if(!string.IsNullOrEmpty(practiceId))used.Add(practiceId);
+        susRemaining = 6; legitRemaining = 4; shiftTaken = 0;
     }
-    static void Shuffle(List<CaseData> items){for(int i=items.Count-1;i>0;i--){int j=UnityEngine.Random.Range(0,i+1);var swap=items[i];items[i]=items[j];items[j]=swap;}}
     public CaseData Take()
     {
-        while (queue.Count > 0)
+        if (adaptiveAgent == null || shiftTaken >= 10) return null;
+        RemoveAlreadyUsedLiveCases();
+        var selected = adaptiveAgent.SelectCase(queue.ToArray(), Fallback, used, susRemaining, legitRemaining);
+        if (selected == null) return null;
+        RemoveQueuedCase(selected);
+        used.Add(selected.id);
+        if (selected.isSus) susRemaining = Mathf.Max(0, susRemaining - 1);
+        else legitRemaining = Mathf.Max(0, legitRemaining - 1);
+        shiftTaken++;
+        return selected;
+    }
+
+    public void RecordAnswer(string category, bool correct) { if (adaptiveAgent != null) adaptiveAgent.RecordAnswer(category, correct); }
+
+    [ContextMenu("Log Adaptive Agent Diagnostics")]
+    public void LogAdaptiveAgentDiagnostics()
+    {
+        if (adaptiveAgent != null) Debug.Log(adaptiveAgent.GetDiagnostics(), this);
+    }
+
+    void RemoveAlreadyUsedLiveCases()
+    {
+        int count = queue.Count;
+        for (int i = 0; i < count; i++)
         {
             var item = queue.Dequeue();
-            if (used.Add(item.id)) return item;
-            Release(item);
+            if (item != null && used.Contains(item.id)) Release(item);
+            else queue.Enqueue(item);
         }
-        while(localShift.Count>0){var item=localShift.Dequeue();if(used.Add(item.id))return item;}
-        var candidates=Fallback.FindAll(c=>!used.Contains(c.id));
-        if (candidates.Count == 0) return null;
-        var fallback = candidates[UnityEngine.Random.Range(0, candidates.Count)];
-        used.Add(fallback.id);
-        return fallback;
+    }
+
+    void RemoveQueuedCase(CaseData selected)
+    {
+        int count = queue.Count;
+        bool removed = false;
+        for (int i = 0; i < count; i++)
+        {
+            var item = queue.Dequeue();
+            if (!removed && ReferenceEquals(item, selected)) removed = true;
+            else queue.Enqueue(item);
+        }
     }
     public void Release(CaseData item)
     {
