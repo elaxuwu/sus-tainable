@@ -13,7 +13,7 @@ public sealed class AdProvider : MonoBehaviour
     public AdaptiveAgentSettings adaptiveSettings = new AdaptiveAgentSettings();
     public string Status { get; private set; } = "LOCAL CASE ARCHIVE";
     public int ReadyCount => queue.Count;
-    public bool IsFetching => fetching;
+    public bool IsFetching => fetchesInFlight > 0;
     public List<CaseData> Fallback { get; private set; } = new List<CaseData>();
     readonly Queue<CaseData> queue = new Queue<CaseData>();
     readonly HashSet<string> used = new HashSet<string>();
@@ -22,7 +22,7 @@ public sealed class AdProvider : MonoBehaviour
     int susRemaining = 6;
     int legitRemaining = 4;
     int shiftTaken;
-    bool fetching;
+    int fetchesInFlight;
     float nextRetry;
     void Awake()
     {
@@ -36,10 +36,13 @@ public sealed class AdProvider : MonoBehaviour
         foreach (var item in Fallback) if (item != null && !string.IsNullOrWhiteSpace(item.category) && !categories.Contains(item.category)) categories.Add(item.category);
         adaptiveAgent = new AdaptiveCategoryAgent(categories, adaptiveSettings);
         if (Application.platform == RuntimePlatform.WebGLPlayer && string.IsNullOrEmpty(endpoint)) endpoint = "/api/cases";
+        if(Application.platform==RuntimePlatform.WebGLPlayer&&!string.IsNullOrEmpty(Application.absoluteURL))
+            offlineOnly|=Application.absoluteURL.Contains("offline=1");
     }
     void Update()
     {
-        if (!offlineOnly && !string.IsNullOrEmpty(endpoint) && queue.Count < 5 && !fetching && Time.unscaledTime >= nextRetry) StartCoroutine(Fetch());
+        if(!offlineOnly&&!string.IsNullOrEmpty(endpoint)&&Time.unscaledTime>=nextRetry)
+            while(fetchesInFlight<3&&queue.Count+fetchesInFlight<5)StartCoroutine(Fetch());
     }
     public void ResetShift(string practiceId=null)
     {
@@ -99,7 +102,10 @@ public sealed class AdProvider : MonoBehaviour
     }
     IEnumerator Fetch()
     {
-        fetching = true; Status = "SUS FACTORY: PREPARING CASES";
+        fetchesInFlight++; Status = "SUS FACTORY: PREPARING CASES";
+        bool accepted=false;
+        try
+        {
         using (var request = new UnityWebRequest(endpoint, "POST"))
         {
             request.uploadHandler = new UploadHandlerRaw(System.Text.Encoding.UTF8.GetBytes("{\"difficulty\":" + Mathf.Clamp(difficulty, 1, 5) + ",\"count\":1}"));
@@ -120,13 +126,18 @@ public sealed class AdProvider : MonoBehaviour
                     yield return LoadImage(item.imageUrl, t => item.productImage = t);
                     yield return LoadImage(item.adImageUrl, t => item.adImage = t);
                     // Only fully downloaded live cases count towards the ready buffer.
-                    if (item.productImage != null && item.adImage != null) queue.Enqueue(item);
+                    if (item.productImage != null && item.adImage != null) {queue.Enqueue(item);accepted=true;}
                     else Release(item);
                 }
             }
         }
-        fetching = false; nextRetry = Time.unscaledTime + (queue.Count == 0 ? 30f : 2f);
-        Status = queue.Count > 0 ? "SUS FACTORY: " + queue.Count + " READY" : "LOCAL ARCHIVE ACTIVE - FACTORY UNAVAILABLE";
+        }
+        finally
+        {
+            fetchesInFlight--;
+            nextRetry=Mathf.Max(nextRetry,Time.unscaledTime+(accepted?2f:30f));
+            Status=fetchesInFlight>0?"SUS FACTORY: PREPARING CASES":queue.Count>0?"SUS FACTORY: "+queue.Count+" READY":"LOCAL ARCHIVE ACTIVE - FACTORY UNAVAILABLE";
+        }
     }
     IEnumerator LoadImage(string url, Action<Texture2D> accept)
     {

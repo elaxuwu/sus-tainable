@@ -7,14 +7,29 @@ public static class SusBuild
     [MenuItem("Sus-tainable/Build WebGL")]
     public static void WebGL()
     {
+        VerifyRelease();
         PlayerSettings.productName="Sus-tainable";
         PlayerSettings.runInBackground=true;
         PlayerSettings.WebGL.compressionFormat=WebGLCompressionFormat.Gzip;
         PlayerSettings.WebGL.decompressionFallback=true;
+        PlayerSettings.WebGL.exceptionSupport=WebGLExceptionSupport.FullWithStacktrace;
         PlayerSettings.WebGL.template="APPLICATION:Minimal";
         var report=BuildPipeline.BuildPlayer(new BuildPlayerOptions { scenes=new[]{"Assets/Scenes/Main.unity"}, locationPathName="public",target=BuildTarget.WebGL,options=BuildOptions.None });
-        if(report.summary.result!=BuildResult.Succeeded)throw new Exception("WebGL build failed: "+report.summary.result);
+        if(report.summary.result!=BuildResult.Succeeded || report.summary.totalErrors>0 || !System.IO.File.Exists("public/index.html"))throw new Exception("WebGL build failed: "+report.summary.result+" / "+report.summary.totalErrors+" errors");
+        long total=0;
+        foreach(string path in System.IO.Directory.GetFiles("public","*",System.IO.SearchOption.AllDirectories))
+        {long bytes=new System.IO.FileInfo(path).Length;total+=bytes;if(bytes>25*1024*1024)throw new Exception("Cloudflare Pages file limit exceeded: "+path);}
+        if(total>50*1024*1024)Debug.LogWarning("Build exceeds the 50 MB target: "+total);
+        System.IO.File.WriteAllText("public/_routes.json","{\"version\":1,\"include\":[\"/api/*\"],\"exclude\":[]}");
+        string loader=System.IO.Directory.GetFiles("public/Build","*.loader.js")[0];
+        string buildName=System.IO.Path.GetFileName(loader).Replace(".loader.js","");
+        System.IO.File.WriteAllText("public/index.html",System.IO.File.ReadAllText("Web/player.html").Replace("{{BUILD_NAME}}",buildName));
         Debug.Log("Sus-tainable WebGL build ready in public/");
+    }
+    public static void VerifyRelease()
+    {
+        Debug.Log(Verify());
+        typeof(AdaptiveAgentTests).GetMethod("RunAll",System.Reflection.BindingFlags.NonPublic|System.Reflection.BindingFlags.Static).Invoke(null,null);
     }
     [MenuItem("Sus-tainable/Verify Case Content and Scoring")]
     public static string Verify()

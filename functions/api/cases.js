@@ -1,11 +1,30 @@
 const TYPES = ['vague', 'fake_label', 'no_proof', 'tiny_truth', 'wrong_comparison'];
-export function validateCase(value) {
-  if (!value || typeof value.product !== 'string' || !value.product.trim() || typeof value.adText !== 'string' || value.adText.length > 650 || typeof value.verdictText !== 'string' || typeof value.isSus !== 'boolean' || !Array.isArray(value.tells) || value.tells.length > 3) return false;
-  if (value.isSus !== (value.tells.length > 0)) return false;
-  return value.tells.every(t => t && typeof t.phrase === 'string' && t.phrase.length > 0 && value.adText.includes(t.phrase) && TYPES.includes(t.type)) && new Set(value.tells.map(t => t.phrase)).size === value.tells.length;
+const CATEGORIES = ['drinks', 'cosmetics', 'fashion', 'snacks', 'tech'];
+export function parseCaseJson(content) {
+  if (typeof content !== 'string') throw new Error('Missing case JSON');
+  // Some compatible providers wrap JSON in a code fence despite json_object mode.
+  const value=content.trim().replace(/^\x60{3}(?:json)?\s*/i,'').replace(/\s*\x60{3}$/,'');
+  return JSON.parse(value);
 }
-async function boundedJson(response, limit) {
-  if (!response.ok) throw new Error('Provider request failed');
+export function validateCase(value) {
+  if (!value || typeof value.product !== 'string' || !value.product.trim() || value.product.length > 100 || !CATEGORIES.includes(value.category) || typeof value.adText !== 'string' || !value.adText.trim() || value.adText.length > 650 || typeof value.verdictText !== 'string' || !value.verdictText.trim() || value.verdictText.length > 300 || typeof value.isSus !== 'boolean' || !Array.isArray(value.tells) || value.tells.length > 3) return false;
+  if (/[<>]/.test(value.product + value.adText + value.verdictText)) return false;
+  if (value.isSus !== (value.tells.length > 0)) return false;
+  const spans=[];
+  for (const tell of value.tells) {
+    if (!tell || typeof tell.phrase !== 'string' || !tell.phrase.trim() || !TYPES.includes(tell.type)) return false;
+    const start=value.adText.indexOf(tell.phrase), end=start+tell.phrase.length;
+    if (start<0 || value.adText.indexOf(tell.phrase,start+1)>=0) return false;
+    const word=c=>c!=null && /[\p{L}\p{N}'’-]/u.test(c);
+    if (word(value.adText[start-1]) || word(value.adText[end])) return false;
+    if (spans.some(([a,b])=>start<b&&end>a)) return false;
+    spans.push([start,end]);
+  }
+  return true;
+}
+async function boundedJson(response, limit, requireOk=true) {
+  if (requireOk && !response.ok) throw new Error('Provider request failed');
+  if (!response.body) throw new Error('Empty response');
   const reader = response.body.getReader(); let total = 0; const chunks = [];
   try {
     while (true) { const {done, value} = await reader.read(); if (done) break; total += value.length; if (total > limit) throw new Error('Provider response too large'); chunks.push(value); }
@@ -36,13 +55,14 @@ export async function onRequestPost(context) {
   const rate = await env.CASE_RATE_LIMITER.limit({key:request.headers.get('CF-Connecting-IP') || 'unknown'});
   if (!rate.success) return json({error:'Please try again later',ads:[]},429);
   let input;
-  try { const raw=await request.text(); if(raw.length>512)return json({error:'Request too large'},413); input=JSON.parse(raw); } catch { return json({error:'Invalid request'},400); }
+  try { input=await boundedJson(request,512,false); } catch { return json({error:'Invalid or oversized request'},400); }
+  if (!input || typeof input !== 'object' || Array.isArray(input)) return json({error:'Expected a request object'},400);
   const difficulty=Number(input.difficulty ?? 1), count=Number(input.count ?? 1);
   if (!Number.isInteger(difficulty) || difficulty<1 || difficulty>5 || !Number.isInteger(count) || count<1 || count>3) return json({error:'Invalid difficulty or count'},400);
   try {
     const result = await call(env,'/chat/completions',{model:env.TEXT_MODEL,temperature:0.8,response_format:{type:'json_object'},messages:[{role:'system',content:'Create fictional greenwashing detective cases. Return JSON {ads:[...]}. Each case has product, category (drinks/cosmetics/fashion/snacks/tech), adText (under 70 words), isSus boolean, tells [{phrase,type,explanation}], verdictText (under 30 words), difficulty. Only fictional brands. No real brands, politics or medical promises. SUS has 1-3 exact non-overlapping phrases in adText, with type vague/fake_label/no_proof/tiny_truth/wrong_comparison. LEGIT has empty tells and a narrowly scoped measured claim, comparison baseline and independent verification supplied as fictional evidence. Explain a claim is supported only within its stated scope. Include both LEGIT and SUS where batch size permits.'},{role:'user',content:'Generate '+count+' cases at difficulty '+difficulty+'.'}]});
     const raw = result.choices?.[0]?.message?.content;
-    const cases = JSON.parse(raw).ads;
+    const cases = parseCaseJson(raw).ads;
     if (!Array.isArray(cases) || cases.length !== count || !cases.every(validateCase)) throw new Error('Invalid cases');
     // Sequential cases bound peak image memory; each case gets two matching illustrations.
     const ads=[];

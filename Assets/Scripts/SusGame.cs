@@ -14,7 +14,7 @@ public sealed class SusGame : MonoBehaviour
     public bool reducedMotion,muted;
     public bool CanAnswer=>state==State.Reading&&settingsMenu!=null&&!settingsMenu.activeSelf&&(helpPanel==null||!helpPanel.activeSelf);
     public TMP_FontAsset bodyFont,displayFont;
-    enum State { Title, Moving, Reading, Verdict, Summary }
+    enum State { Title, Preparing, Moving, Reading, Verdict, Summary }
     State state;
     AdProvider provider;
     Camera view;
@@ -53,6 +53,7 @@ public sealed class SusGame : MonoBehaviour
     CaseData current;
     int completed,score,streak,best,correct,maximum;
     bool tutorial;
+    bool useArchive;
     float started;
     AudioSource sound;
     AudioClip good,bad;
@@ -188,7 +189,7 @@ public sealed class SusGame : MonoBehaviour
         Label("Bureau name",modal.transform,"Bureau of Sus",new Vector2(15,298),new Vector2(840,45),22,Ink);
         modalTitle=Label("Report title",modal.transform,"",new Vector2(15,208),new Vector2(840,150),76,Ink);modalTitle.fontStyle=FontStyles.Bold;if(displayFont!=null)modalTitle.font=displayFont;
         modalBody=Label("Report body",modal.transform,"",new Vector2(15,-50),new Vector2(840,300),27,Ink);modalBody.lineSpacing=5;modalBody.enableAutoSizing=true;modalBody.fontSizeMin=21;modalBody.fontSizeMax=27;
-        action=Button("Report action",modal.transform,"Start shift",new Vector2(-260,-294),new Vector2(290,66),BeginShift);
+        action=Button("Report action",modal.transform,"Start shift",new Vector2(-260,-294),new Vector2(290,66),()=>{if(state==State.Preparing)useArchive=true;else BeginShift();});
         summaryStats=Back("Shift totals",modal.transform,new Vector2(15,82),new Vector2(840,78),new Color(.88f,.92f,.88f)).gameObject;
         summaryNumbers=Label("Shift totals text",summaryStats.transform,"",Vector2.zero,new Vector2(792,68),26,Ink);summaryNumbers.enableAutoSizing=true;summaryNumbers.fontSizeMin=20;summaryNumbers.fontSizeMax=26;summaryStats.SetActive(false);
         summaryReward=Label("Shift reward",modal.transform,"",new Vector2(175,-294),new Vector2(480,68),22,Ink);summaryReward.alignment=TextAlignmentOptions.MidlineRight;
@@ -262,20 +263,32 @@ public sealed class SusGame : MonoBehaviour
     }
     public void BeginShift()
     {
+        if(provider==null||modal==null||settingsMenu==null||summaryStats==null||helpPanel==null)
+        {
+            Debug.LogError("Shift initialization incomplete: provider="+(provider!=null)+", modal="+(modal!=null)+", settings="+(settingsMenu!=null)+", totals="+(summaryStats!=null)+", help="+(helpPanel!=null));
+            return;
+        }
         if(state!=State.Title&&state!=State.Summary)return;
         completed=score=streak=best=correct=maximum=0; recent.Clear(); provider.difficulty=1; tutorial=true; modal.SetActive(false);settingsMenu.SetActive(false);summaryStats.SetActive(false);helpPanel.SetActive(false);legitCorrect=0;System.Array.Clear(tellCounts,0,tellCounts.Length);
-        current=provider.Fallback.Find(c=>c.isSus);provider.ResetShift(current?.id); StartCoroutine(PrepareShift());
+        current=provider.Fallback.Find(c=>c.isSus);provider.ResetShift(current?.id); StartCoroutine(ShowCase());
     }
     IEnumerator PrepareShift()
     {
-        state=State.Moving;
-        // Bound initial waiting; fallback remains available if generation is slow.
-        if (!tutorial&&!provider.offlineOnly && !string.IsNullOrEmpty(provider.endpoint))
+        if(!provider.offlineOnly&&!string.IsNullOrEmpty(provider.endpoint)&&provider.ReadyCount<3)
         {
+            state=State.Preparing;useArchive=false;modal.SetActive(true);summaryStats.SetActive(false);
+            modalTitle.text="Preparing your shift";summaryReward.text="";
+            modalBody.rectTransform.anchoredPosition=new Vector2(15,-50);modalBody.rectTransform.sizeDelta=new Vector2(840,300);
+            action.GetComponentInChildren<TMP_Text>().text="Use local cases";
             float deadline=Time.unscaledTime+8f;
-            while(provider.ReadyCount<3 && Time.unscaledTime<deadline) yield return null;
+            while(provider.ReadyCount<3&&!useArchive&&Time.unscaledTime<deadline)
+            {
+                modalBody.text="New product cases are being prepared.\n\n"+provider.ReadyCount+" / 3 ready\n\nYou can start with the local archive at any time.";
+                yield return null;
+            }
+            modal.SetActive(false);
         }
-        yield return ShowCase();
+        current=provider.Take();yield return ShowCase();
     }
     IEnumerator ShowCase()
     {
@@ -307,7 +320,7 @@ public sealed class SusGame : MonoBehaviour
             provider.RecordAnswer(current,right,selection.phrases);
             completed++;maximum+=CaseScoring.Maximum(current,completed);score+=points;streak=next;best=Mathf.Max(best,streak);if(right){correct++;if(!current.isSus)legitCorrect++;}
             foreach(var tell in current.tells)if(selection.phrases.Exists(p=>CaseScoring.Normalize(p)==CaseScoring.Normalize(tell.phrase))){int index=System.Array.IndexOf(new[]{"vague","fake_label","no_proof","tiny_truth","wrong_comparison"},tell.type);if(index>=0)tellCounts[index]++;}
-            recent.Add(right);if(recent.Count==5){int wins=recent.FindAll(v=>v).Count;if(wins>=4)provider.difficulty=Mathf.Min(5,provider.difficulty+1);else if(wins<=2)provider.difficulty=Mathf.Max(1,provider.difficulty-1);recent.Clear();}
+            recent.Add(right);if(recent.Count>5)recent.RemoveAt(0);if(recent.Count==5){int wins=recent.FindAll(v=>v).Count;if(wins>=4)provider.difficulty=Mathf.Min(5,provider.difficulty+1);else if(wins<=2)provider.difficulty=Mathf.Max(1,provider.difficulty-1);}
         }
         selection.Reveal(current);clearEvidence.gameObject.SetActive(false);
         feedbackTitle.text=(right?"Correct verdict":"Verdict corrected")+"  /  "+(current.isSus?"SUS":"LEGIT");
@@ -322,7 +335,7 @@ public sealed class SusGame : MonoBehaviour
     {
         state=State.Moving;selection.interactable=false;clearEvidence.gameObject.SetActive(false);continueButton.gameObject.SetActive(false);yield return Slide(restingPanelPosition,CaseOffscreen(1));
         provider.Release(current);
-        if(tutorial)tutorial=false;else if(completed>=10){Summary();yield break;}
+        if(tutorial){tutorial=false;yield return PrepareShift();yield break;}else if(completed>=10){Summary();yield break;}
         current=provider.Take();yield return ShowCase();
     }
     Vector3 CaseOffscreen(int direction)
@@ -346,7 +359,7 @@ public sealed class SusGame : MonoBehaviour
         summaryReward.text="+"+xp+" XP  /  "+rank+(string.IsNullOrEmpty(badge)?"":"\n"+badge);
         float ratio=maximum>0?(float)score/maximum:0;int stars=ratio>=.9f?3:ratio>=.75f?2:ratio>=.5f?1:0;
         modalTitle.text="Shift complete";
-        summaryStats.SetActive(true);summaryNumbers.text=score+" points     "+correct+" / 10 correct     "+best+" best streak";
+        summaryStats.SetActive(true);summaryNumbers.text=stars+" / 3 stars    "+score+" points    "+correct+" / 10 correct";
         modalBody.rectTransform.anchoredPosition=new Vector2(15,-103);modalBody.rectTransform.sizeDelta=new Vector2(840,246);
         string strongest="";int count=0;var names=new[]{"Vague claims","Self-awarded labels","Unsupported promises","Tiny truths","Unclear comparisons"};
         for(int i=0;i<5;i++)if(tellCounts[i]>count){count=tellCounts[i];strongest=names[i];}

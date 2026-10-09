@@ -10,6 +10,11 @@ Unity 6000.6.4f1 URP detective prototype. Open Assets/Scenes/Main.unity and pres
 - NEXT CASE advances after the verdict. Summary lets you replay.
 - SOUND toggles audio; MOTION toggles reduced motion (including camera movement); TEXT + toggles larger text.
 
+## Hosted game
+
+Play: https://sus-tainable.pages.dev/
+Offline archive: https://sus-tainable.pages.dev/?offline=1
+
 ## Build
 
 Unity menu: Sus-tainable > Build WebGL. Output is public/. Use an HTTP server; do not open index.html directly.
@@ -25,16 +30,16 @@ Images are data:image/png;base64 URLs. Both must decode before a live case becom
 Server configuration:
 - ONEENDPOINT_API_KEY: server secret only, never in Assets or public.
 - TEXT_MODEL: confirmed available text model for case JSON.
-- IMAGE_MODEL: gpt-image-2, pending account confirmation.
+- IMAGE_MODEL: gpt-image-2 (confirmed available).
 - ONEENDPOINT_BASE_URL: https://1endpoint.dev/api/v1.
 - CASE_RATE_LIMITER: configured on the generation Worker (six requests/minute per IP).
 
 Pages forwards /api/cases to the private sus-tainable-factory Worker through its FACTORY service binding.
 Deploy the Worker first: npx wrangler deploy --config wrangler.factory.jsonc
 Configure its secret interactively: npx wrangler secret put ONEENDPOINT_API_KEY --config wrangler.factory.jsonc
-Then deploy public/ to Pages. Confirm the exact DeepSeek model identifier before a live request.
+Then deploy public/ to Pages. Confirmed text model: deepseek-v4.1-flash. Provider JSON can arrive in a Markdown code fence and is normalised before validation.
 
-Unconfigured service returns 503; Unity continues using local cases. Initial waiting is capped at eight seconds. Queue targets five complete cases and refills in the background.
+Unconfigured service returns 503; Unity continues using local cases. After practice, scored-shift preparation waits for three complete cases for up to eight seconds, with an immediate local-archive option. The queue targets five ready cases, with up to three generation requests in flight.
 Product/ad artwork is generated separately; exact visual consistency needs reference-image edits in a later iteration.
 
 ## Verification
@@ -52,12 +57,16 @@ Category mastery requires a correct verdict, every expected evidence phrase, and
 
 ## Remaining release work
 
-Local illustrations remain procedural placeholders. Marker strokes, verdict stamping, guided practice, distinct fallback cases, persistent settings, and XP/rank feedback are implemented. Detective character animation, polished product art, live provider validation and hosted browser verification remain. Hosting is not yet configured.
+Live generation and Cloudflare hosting are verified. Chrome loaded the WebGL runtime, completed practice keyboard selection/verdict/case advance, and resized without errors after scene startup. Local illustrations remain procedural placeholders. Detective character animation, production audio, full cumulative badges, and touch/visual acceptance remain.
 
 Typography uses Barlow and Barlow Condensed under the SIL Open Font License; see Assets/Fonts for licenses.
 
 ## Desk interface refinement
 
-The case and circular verdict controls use physical desk coordinates. Both controls sit above the tabletop; the smaller case clears the lamp, plant, PC and desk props. Case transitions travel only eight centimetres. Settings rows stay inside their menu. Repeated controls text is confined to practice and How to play. Blank-space clicks no longer select nearby words. Mouse look responds continuously with subtle limits, holds during evidence selection, and settles to neutral outside the viewport or while menus are open.
+The case and circular verdict controls use physical desk coordinates. Both controls sit above the tabletop; the smaller case clears the lamp, plant, PC and desk props. Case transitions enter from the left and exit fully to the right. Settings rows stay inside their menu. Repeated controls text is confined to practice and How to play. Blank-space clicks no longer select nearby words. Mouse look responds continuously with subtle limits, holds during evidence selection, and settles to neutral outside the viewport or while menus are open.
 
 Live verification: compilation, settings containment and input gating, physical button raycasts, evidence add/remove/clear, practice plus a ten-case shift, and renderer bounds against the tabletop and desk props. Visual review on additional display sizes and touch usability still need a device pass.
+
+## Release checks, 9 October 2026
+
+The adaptive-agent regression runs in Unity before builds. Server tests cover fenced provider JSON, invalid evidence, malformed requests, service routing and mocked two-image generation. Both selected model IDs were confirmed against the provider listing. One direct live case and one hosted Pages-to-Worker case returned valid metadata and two PNG images. The WebGL output is roughly 20 MB, below the 50 MB target, with each file below 25 MB. Full exception support is enabled for useful browser diagnostics. Wait for Unity splash/scene startup before using test hooks.
