@@ -29,6 +29,7 @@ internal sealed class AdaptiveCategoryStats
 internal sealed class AdaptiveAgentMemory
 {
     public List<AdaptiveCategoryStats> categories = new List<AdaptiveCategoryStats>();
+    public List<AdaptiveCategoryStats> tells = new List<AdaptiveCategoryStats>();
     public List<string> recentCaseIds = new List<string>();
     public string lastCategory;
     public string lastSelection;
@@ -51,10 +52,13 @@ public struct AdaptiveCategorySelection
 /// <summary>Small, deterministic-per-session category selector with local aggregate memory.</summary>
 public sealed class AdaptiveCategoryAgent
 {
-    public const string DefaultPrefsKey = "SusTainable.AdaptiveAgent.Memory.v1";
+    // Verdict-only v1 history is not evidence mastery; start the new learning record fresh.
+    public const string DefaultPrefsKey = "SusTainable.AdaptiveAgent.Memory.v2";
 
     readonly List<AdaptiveCategoryStats> categories = new List<AdaptiveCategoryStats>();
     readonly Dictionary<string, AdaptiveCategoryStats> byCategory = new Dictionary<string, AdaptiveCategoryStats>(StringComparer.Ordinal);
+    readonly List<AdaptiveCategoryStats> tells = new List<AdaptiveCategoryStats>();
+    readonly Dictionary<string, AdaptiveCategoryStats> byTell = new Dictionary<string, AdaptiveCategoryStats>(StringComparer.Ordinal);
     readonly List<string> recentCaseIds = new List<string>();
     readonly HashSet<string> recentCaseSet = new HashSet<string>(StringComparer.Ordinal);
     readonly AdaptiveAgentSettings settings;
@@ -86,6 +90,11 @@ public sealed class AdaptiveCategoryAgent
             }
         }
 
+        foreach (string type in new[] { "vague", "fake_label", "no_proof", "tiny_truth", "wrong_comparison" })
+        {
+            var stats = new AdaptiveCategoryStats { category = type };
+            tells.Add(stats); byTell.Add(type, stats);
+        }
         LoadMemory();
         RecalculateWeights();
     }
@@ -94,14 +103,47 @@ public sealed class AdaptiveCategoryAgent
     {
         if (string.IsNullOrWhiteSpace(category) || !byCategory.TryGetValue(category.Trim(), out var stats)) return;
 
+        RecordResult(stats, correct);
+        RecalculateWeights();
+        SaveMemory();
+    }
+
+    public void RecordAnswer(CaseData data, bool verdictCorrect, IList<string> highlights)
+    {
+        if (data == null || data.tells == null || !byCategory.TryGetValue((data.category ?? string.Empty).Trim(), out var category)) return;
+        var selected = new HashSet<string>(StringComparer.Ordinal);
+        bool falseEvidence = false;
+        if (highlights != null)
+            foreach (string phrase in highlights)
+            {
+                string normalized = CaseScoring.Normalize(phrase ?? string.Empty);
+                if (!selected.Add(normalized) || !Array.Exists(data.tells, tell => CaseScoring.Normalize(tell.phrase) == normalized)) falseEvidence = true;
+            }
+        bool mastered = verdictCorrect && !falseEvidence;
+        var typeResults = new Dictionary<string, bool>(StringComparer.Ordinal);
+        foreach (var tell in data.tells)
+        {
+            bool found = selected.Contains(CaseScoring.Normalize(tell.phrase));
+            mastered &= found;
+            bool success = verdictCorrect && found && !falseEvidence;
+            typeResults[tell.type] = success && (!typeResults.TryGetValue(tell.type, out bool previous) || previous);
+        }
+        RecordResult(category, mastered);
+        foreach (var result in typeResults) if (byTell.TryGetValue(result.Key, out var stats)) RecordResult(stats, result.Value);
+        RecalculateWeights(); SaveMemory();
+    }
+
+    void RecordResult(AdaptiveCategoryStats stats, bool correct)
+    {
         stats.attempts++;
         if (correct) stats.correct++;
         else stats.incorrect++;
         stats.recentResults.Add(correct);
         while (stats.recentResults.Count > settings.recentWindow) stats.recentResults.RemoveAt(0);
-        RecalculateWeights();
-        SaveMemory();
     }
+
+    public float GetTellWeight(string type) => byTell.TryGetValue(type ?? string.Empty, out var stats) ? stats.weight : 0f;
+    public int GetTellAttempts(string type) => byTell.TryGetValue(type ?? string.Empty, out var stats) ? stats.attempts : 0;
 
     public float GetWeight(string category)
     {
@@ -166,29 +208,44 @@ public sealed class AdaptiveCategoryAgent
         List<CaseData> available = BuildCandidates(liveCases, fallbackCases, usedCaseIds);
         if (available.Count == 0) return null;
 
-        var nonRecent = available.FindAll(item => !WasCaseRecentlySeen(item.id));
-        if (CanFill(nonRecent, susRemaining, legitRemaining)) available = nonRecent;
-
         List<CaseData> eligible = FindQuotaSafeCandidates(available, Math.Max(0, susRemaining), Math.Max(0, legitRemaining));
         if (eligible.Count == 0) eligible = available;
         if (eligible.Count == 0) return null;
 
+        // Consume ready generated cases before fallback, even in a well-learned category.
+        // Quotas still prevent a ready SUS case from replacing a required LEGIT slot.
+        var readyLive = eligible.FindAll(item => item.productImage != null && item.adImage != null);
+        if (readyLive.Count > 0) eligible = readyLive;
+        else
+        {
+            var nonRecent = available.FindAll(item => !WasCaseRecentlySeen(item.id));
+            if (CanFill(nonRecent, susRemaining, legitRemaining)) eligible = FindQuotaSafeCandidates(nonRecent, Math.Max(0, susRemaining), Math.Max(0, legitRemaining));
+        }
         List<string> candidateCategories = UniqueCategories(eligible);
         AdaptiveCategorySelection selection = SelectCategory(candidateCategories);
         List<CaseData> sameCategory = eligible.FindAll(item => item.category.Trim() == selection.category);
         if (sameCategory.Count == 0) return null;
 
-        List<CaseData> liveInCategory = sameCategory.FindAll(item => item.productImage != null && item.adImage != null);
-        List<CaseData> pool = liveInCategory.Count > 0 ? liveInCategory : sameCategory;
-        CaseData selectedCase = pool[random.Next(pool.Count)];
+        double total = 0; foreach (var item in sameCategory) total += EvidenceWeight(item);
+        double roll = random.NextDouble() * total;
+        CaseData selectedCase = sameCategory[sameCategory.Count - 1];
+        foreach (var item in sameCategory) { roll -= EvidenceWeight(item); if (roll < 0) { selectedCase = item; break; } }
         lastSelection = selection.category + " (priority " + selection.weight.ToString("0.00") + "): " + selection.reason;
         RecordCaseSeen(selectedCase.id);
         return selectedCase;
     }
 
+    float EvidenceWeight(CaseData data)
+    {
+        if (data.tells == null || data.tells.Length == 0) return 1f;
+        var seen = new HashSet<string>(); float total = 0;
+        foreach (var tell in data.tells) if (seen.Add(tell.type)) total += GetTellWeight(tell.type);
+        return seen.Count == 0 ? 1f : Mathf.Max(.01f, total / seen.Count);
+    }
+
     public string GetDiagnostics()
     {
-        var output = new StringBuilder("Adaptive category memory (local aggregate statistics)");
+        var output = new StringBuilder("Adaptive evidence mastery (local aggregate statistics)");
         foreach (var stats in categories)
         {
             output.Append("\n").Append(stats.category)
@@ -206,6 +263,7 @@ public sealed class AdaptiveCategoryAgent
 
         output.Append("\nMost frequently missed: ").Append(mostMissed == null ? "none yet" : mostMissed.category + " (" + mostMissed.incorrect + ")")
             .Append("\nLast selected: ").Append(lastSelection);
+        foreach (var stats in tells) output.Append("\nTell ").Append(stats.category).Append(": attempts=").Append(stats.attempts).Append(", correct=").Append(stats.correct).Append(", weight=").Append(stats.weight.ToString("0.00"));
         return output.ToString();
     }
 
@@ -299,7 +357,7 @@ public sealed class AdaptiveCategoryAgent
 
     void RecalculateWeights()
     {
-        foreach (AdaptiveCategoryStats stats in categories)
+        foreach (AdaptiveCategoryStats stats in AllStats())
         {
             if (stats.attempts == 0) { stats.weight = 1f; continue; }
             float historicalAccuracy = (stats.correct + 2f) / (stats.attempts + 4f);
@@ -311,6 +369,9 @@ public sealed class AdaptiveCategoryAgent
             stats.weight = Mathf.Max(.0001f, stats.weight);
         }
     }
+
+    IEnumerable<AdaptiveCategoryStats> AllStats()
+    { foreach (var stats in categories) yield return stats; foreach (var stats in tells) yield return stats; }
 
     void LoadMemory()
     {
@@ -337,6 +398,14 @@ public sealed class AdaptiveCategoryAgent
                 stats.recentResults = SanitizeRecentResults(saved.recentResults, stats.attempts);
             }
         }
+        if (memory.tells != null)
+            foreach (var saved in memory.tells)
+            {
+                if (saved == null || string.IsNullOrEmpty(saved.category) || !byTell.TryGetValue(saved.category, out var stats)) continue;
+                if (saved.attempts < 0 || saved.correct < 0 || saved.correct > saved.attempts || saved.incorrect != saved.attempts - saved.correct) continue;
+                stats.attempts = saved.attempts; stats.correct = saved.correct; stats.incorrect = saved.incorrect;
+                stats.recentResults = SanitizeRecentResults(saved.recentResults, stats.attempts);
+            }
 
         if (memory.recentCaseIds != null)
         {
@@ -370,6 +439,7 @@ public sealed class AdaptiveCategoryAgent
         var memory = new AdaptiveAgentMemory
         {
             categories = categories,
+            tells = tells,
             recentCaseIds = recentCaseIds,
             lastCategory = lastCategory,
             lastSelection = lastSelection

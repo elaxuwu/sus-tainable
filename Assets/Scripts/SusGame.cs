@@ -304,7 +304,7 @@ public sealed class SusGame : MonoBehaviour
         int points=CaseScoring.Score(current,suspicious,selection.phrases,next,Time.unscaledTime-started,out found,out falseEvidence);
         if(!tutorial)
         {
-            provider.RecordAnswer(current.category,right);
+            provider.RecordAnswer(current,right,selection.phrases);
             completed++;maximum+=CaseScoring.Maximum(current,completed);score+=points;streak=next;best=Mathf.Max(best,streak);if(right){correct++;if(!current.isSus)legitCorrect++;}
             foreach(var tell in current.tells)if(selection.phrases.Exists(p=>CaseScoring.Normalize(p)==CaseScoring.Normalize(tell.phrase))){int index=System.Array.IndexOf(new[]{"vague","fake_label","no_proof","tiny_truth","wrong_comparison"},tell.type);if(index>=0)tellCounts[index]++;}
             recent.Add(right);if(recent.Count==5){int wins=recent.FindAll(v=>v).Count;if(wins>=4)provider.difficulty=Mathf.Min(5,provider.difficulty+1);else if(wins<=2)provider.difficulty=Mathf.Max(1,provider.difficulty-1);recent.Clear();}

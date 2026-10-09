@@ -41,7 +41,14 @@ Product/ad artwork is generated separately; exact visual consistency needs refer
 
 - npm test: server validation and error tests.
 - Unity menu: Sus-tainable > Verify Case Content and Scoring.
+- Unity menu: Sus-tainable > Verify Adaptive Agent.
 - Full-shift and pointer regressions are run through the live Editor; no test objects are added to the game scene.
+
+## Adaptive practice
+
+Ready generated cases take priority over fallback when they fit the remaining six SUS / four LEGIT slots. Adaptation chooses among eligible cases and cannot leave usable live images stranded behind easier local categories.
+
+Category mastery requires a correct verdict, every expected evidence phrase, and no false selections. The agent also records results for each greenwashing tell type and favours practice for missed tells. Evidence-aware memory uses a new v2 save key; old verdict-only history is not treated as mastered evidence. Images, score rules and career XP are unchanged.
 
 ## Remaining release work
 

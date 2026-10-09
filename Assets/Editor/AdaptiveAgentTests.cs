@@ -26,7 +26,10 @@ internal static class AdaptiveAgentTests
             LiveCasesKeepTheirGeneratedImages();
             DiagnosticsExplainCategoryPriority();
             DiagnosticsDistinguishNoAttemptsFromNoCorrectAnswers();
-            Debug.Log("PASS: adaptive category selection, memory, case reuse, and live-case compatibility.");
+            ReadyLiveCasesCannotStarve();
+            EvidenceMasteryDrivesLearning();
+            WeakTellTypesReceivePractice();
+            Debug.Log("PASS: adaptive category/evidence mastery, persistence, quota-safe live priority, and case reuse.");
         }
         catch (Exception exception)
         {
@@ -247,6 +250,76 @@ internal static class AdaptiveAgentTests
         foreach (string category in Categories) counts[category] = 0;
         for (int i = 0; i < count; i++) counts[agent.SelectCategory(Categories).category]++;
         return counts;
+    }
+
+    static void ReadyLiveCasesCannotStarve()
+    {
+        var cases = MakeCases();
+        var image = new Texture2D(1, 1);
+        try
+        {
+            for (int seed = 0; seed < 100; seed++)
+            {
+                var agent = CreateAgent("live-priority", seed);
+                for (int i = 0; i < 20; i++) { agent.RecordAnswer("drinks", true); agent.RecordAnswer("fashion", false); }
+                var live = Enumerable.Range(0, 5).Select(i => new CaseData { id = "live-" + i, category = "drinks", isSus = true, tells = new CaseTell[0], productImage = image, adImage = image }).ToList();
+                agent.RecordCaseSeen(live[0].id);
+                var used = new HashSet<string>(); int sus = 6, legit = 4;
+                for (int i = 0; i < 10; i++)
+                {
+                    var selected = agent.SelectCase(live, cases, used, sus, legit);
+                    Require(selected != null && used.Add(selected.id), "A full shift must remain available without duplicates.");
+                    if (i < 5) Require(live.Contains(selected), "Ready quota-safe live cases must precede fallback.");
+                    live.Remove(selected); if (selected.isSus) sus--; else legit--;
+                }
+                Require(sus == 0 && legit == 0 && live.Count == 0, "Live priority must preserve the 6/4 quotas.");
+                var blocked = new CaseData { id = "extra-sus", category = "drinks", isSus = true, tells = new CaseTell[0], productImage = image, adImage = image };
+                Require(!agent.SelectCase(new[] { blocked }, cases, new HashSet<string>(), 0, 1).isSus, "Live SUS cannot displace a required LEGIT slot.");
+            }
+        }
+        finally { UnityEngine.Object.DestroyImmediate(image); }
+    }
+
+    static CaseData LearningCase(string type = "vague") => new CaseData {
+        id = "learning", category = "drinks", product = "Demo", adText = "Green claim", isSus = true,
+        tells = new[] { new CaseTell { phrase = "Green", type = type } }, verdictText = "Reason"
+    };
+
+    static void EvidenceMasteryDrivesLearning()
+    {
+        string key = NewKey("evidence-persist");
+        var agent = new AdaptiveCategoryAgent(Categories, Settings(), key, 42);
+        var data = LearningCase();
+        agent.RecordAnswer(data, true, new List<string>());
+        Require(agent.GetCorrect("drinks") == 0 && agent.GetTellWeight("vague") > 1, "Correct verdict without evidence is not mastery.");
+        agent.RecordAnswer(data, true, new[] { "Green", "claim" });
+        Require(agent.GetCorrect("drinks") == 0, "False evidence cannot count as mastery.");
+        agent.RecordAnswer(data, true, new[] { "Green" });
+        Require(agent.GetCorrect("drinks") == 1 && agent.GetTellAttempts("vague") == 3, "Complete correct evidence records mastery.");
+        agent.RecordAnswer(data, false, new[] { "Green" });
+        Require(agent.GetCorrect("drinks") == 1, "Wrong verdict cannot record mastery.");
+        var restored = new AdaptiveCategoryAgent(Categories, Settings(), key, 42);
+        Require(restored.GetTellAttempts("vague") == 4 && Mathf.Approximately(restored.GetTellWeight("vague"), agent.GetTellWeight("vague")), "Tell memory must persist.");
+        var legit = new CaseData { category = "drinks", tells = new CaseTell[0], isSus = false };
+        agent.RecordAnswer(legit, true, new[] { "false alarm" });
+        Require(agent.GetCorrect("drinks") == 1, "False highlights on LEGIT are not mastery.");
+        agent.RecordAnswer(legit, true, Array.Empty<string>());
+        Require(agent.GetCorrect("drinks") == 2, "Clean LEGIT verdict counts as mastery.");
+    }
+
+    static void WeakTellTypesReceivePractice()
+    {
+        var agent = CreateAgent("tell-practice", 81, repeatPenalty: 1);
+        for (int i = 0; i < 20; i++) {
+            agent.RecordAnswer(LearningCase("vague"), true, Array.Empty<string>());
+            agent.RecordAnswer(LearningCase("no_proof"), true, new[] { "Green" });
+        }
+        Require(agent.GetTellWeight("vague") > agent.GetTellWeight("no_proof"), "Missed tells should have higher priority than mastered tells.");
+        var weak = LearningCase("vague"); weak.id = "weak";
+        var mastered = LearningCase("no_proof"); mastered.id = "mastered";
+        int weakCount = 0;
+        for (int i = 0; i < 3000; i++) if (agent.SelectCase(Array.Empty<CaseData>(), new[] { weak, mastered }, new HashSet<string>(), 1, 0) == weak) weakCount++;
+        Require(weakCount > 1800, "Selection should provide more practice for the missed tell type.");
     }
 
     static List<CaseData> MakeCases()

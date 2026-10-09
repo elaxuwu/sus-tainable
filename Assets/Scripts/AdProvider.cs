@@ -60,7 +60,7 @@ public sealed class AdProvider : MonoBehaviour
         return selected;
     }
 
-    public void RecordAnswer(string category, bool correct) { if (adaptiveAgent != null) adaptiveAgent.RecordAnswer(category, correct); }
+    public void RecordAnswer(CaseData data, bool correct, IList<string> highlights) { if (adaptiveAgent != null) adaptiveAgent.RecordAnswer(data, correct, highlights); }
 
     [ContextMenu("Log Adaptive Agent Diagnostics")]
     public void LogAdaptiveAgentDiagnostics()
